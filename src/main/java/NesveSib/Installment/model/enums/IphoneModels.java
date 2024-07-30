@@ -1,0 +1,50 @@
+package NesveSib.Installment.model.enums;
+
+public enum IphoneModels {
+    iPhone (2007),
+    iPhone3G( 2008),
+    iPhone3GS (2009),
+    iPhone4 (2010),
+    iPhone4S (2011),
+    iPhone5 (2012),
+    iPhone5S (2013),
+    iPhone5C (2013),
+    iPhone6 (2014),
+    iPhone6Plus (2014),
+    iPhone6S (2015),
+    iPhone6SPlus (2015),
+    iPhoneSE (2016),
+    iPhone7 (2016),
+    iPhone7Plus (2016),
+    iPhone8 (2017),
+    iPhone8Plus (2017),
+    iPhoneX (2017),
+    iPhoneXR (2018),
+    iPhoneXS (2018),
+    iPhoneXSMax (2018),
+    iPhone11 (2019),
+    iPhone11Pro (2019),
+    iPhone11ProMax (2019),
+    iPhoneSE2020 (2020),
+    iPhone12Mini (2020),
+    iPhone12 (2020),
+    iPhone12Pro (2020),
+    iPhone12ProMax (2020),
+    iPhone13Mini (2021),
+    iPhone13 (2021),
+    iPhone13Pro (2021),
+    iPhone13ProMax (2021),
+    iPhone14 (2022),
+    iPhone14Plus (2022),
+    iPhone14Pro(2022),
+    iPhone14ProMax(2022),
+    iPhone15(2023),
+    iPhone15Plus(2023),
+    iPhone15Pro(2023),
+    iPhone15ProMax(2023),
+
+    ;
+
+    IphoneModels(int yearDeveloped) {
+    }
+}
