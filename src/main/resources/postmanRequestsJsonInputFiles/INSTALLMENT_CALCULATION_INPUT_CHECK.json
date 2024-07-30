@@ -1,0 +1,5 @@
+{
+  "numOfInstallments" : 5,
+  "amountToCalculate" : 23000000,
+  "TypeOfGuarantee" : "CHECK"
+}
