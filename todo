@@ -3,4 +3,5 @@
 3 tracing senarios using logback and slf4j
 4 enabling sending notifications to seller and costumers
 5 2-factor authorization for sellers and customers with phone number or email address
-6
+6 creating databases design
+7 implementing pdf writing for writing the invoices for seller and customer in pdf file
