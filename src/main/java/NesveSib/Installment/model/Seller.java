@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class Seller {
@@ -37,6 +39,9 @@ public class Seller {
     private int storePlate;
 
     private String encryptedPassword;
+
+    private List<Product> sellerSoledProducts;
+
 
     @Override
     public String toString() {
