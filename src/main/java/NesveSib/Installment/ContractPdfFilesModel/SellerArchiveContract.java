@@ -2,8 +2,10 @@ package NesveSib.Installment.ContractPdfFilesModel;
 
 import NesveSib.Installment.model.Money;
 import NesveSib.Installment.model.enums.TypeOfGuarantee;
+import NesveSib.Installment.service.SellerAccountService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 @RequiredArgsConstructor
 @Getter
 public class SellerArchiveContract {
+
 
     /*TODO: this class will be created to create a pdf form Contract for sellers to archive in their sales list*/
 

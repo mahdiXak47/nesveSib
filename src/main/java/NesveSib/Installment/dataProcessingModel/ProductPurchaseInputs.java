@@ -1,6 +1,9 @@
 package NesveSib.Installment.dataProcessingModel;
 
 
+import NesveSib.Installment.model.productModels.Product;
+import NesveSib.Installment.model.users.Customer;
+import NesveSib.Installment.model.users.Seller;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -8,15 +11,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductPurchaseInputs {
 
-
-    private final String sellerUsername;
-    private final String sellerPassword;
-    private final String sellerEmail;
-
-    private final String productName;
-
-    private final String customerUsername;
-    private final String customerPassword;
-    private final String customerNationalId;
+    private final Customer customer;
+    private final Product product;
+    private final Seller seller;
 
 }

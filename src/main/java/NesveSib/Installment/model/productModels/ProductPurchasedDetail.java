@@ -7,11 +7,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@RequiredArgsConstructor
 @Setter
 @Entity
 @Table(name = "purchasedproducttbl")
@@ -19,31 +17,31 @@ public class ProductPurchasedDetail {
 
     @Id
     @Column(name = "purchasedproductcode")
-    private final Integer purchasedProductCode;
+    private Integer purchasedProductCode;
 
     @NonNull
     @Column(name = "productprice")
-    private final Double productPrice;
+    private Double productPrice;
 
     @NonNull
     @Column(name = "productpurchaseininstallment")
-    private final Boolean isProductPurchaseInInstallment;
+    private Boolean isProductPurchaseInInstallment;
 
     @NonNull
     @Column(name = "productnumofinstallments")
-    private final Integer productNumOnInstallments;
+    private Integer productNumOnInstallments;
 
     @NonNull
     @Column(name = "purchasedproductid")
-    private final Integer purchasedProduct;
+    private Integer purchasedProduct;
 
     @NonNull
     @Column(name = "customernationalid")
-    private final String customerNationalId;
+    private String customerNationalId;
 
     @NonNull
     @Column(name = "sellernationalid")
-    private final String sellerNationalId;
+    private String sellerNationalId;
 
     @Override
     public String toString() {

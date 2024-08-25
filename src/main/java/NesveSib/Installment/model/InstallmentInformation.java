@@ -6,21 +6,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Entity
 @Table(name = "productinstallmentdetailtbl")
 public class InstallmentInformation {
 
     @Id
     @Column(name = "installmentcode")
-    private final Long installmentCode;
+    private Long installmentCode;
 
     @NonNull
     @Column(name = "customernationalid")

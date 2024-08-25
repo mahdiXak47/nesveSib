@@ -4,13 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "generalusertbl")
 public abstract class User {
@@ -36,6 +36,9 @@ public abstract class User {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "emailverified")
+    private boolean emailVerified;
+
     @NonNull
     @Column(name = "address")
     private String address;
@@ -43,9 +46,6 @@ public abstract class User {
     @NonNull
     @Column(name = "phonenumber")
     private String phoneNumber;
-
-    @Column(name = "emailverified")
-    private boolean emailVerified;
 
     @Column(name = "phoneverified")
     private boolean phoneVerified;

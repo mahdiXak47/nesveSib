@@ -1,20 +1,26 @@
 package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.model.users.Customer;
+import NesveSib.Installment.utils.ProjectInternalTools;
+import ch.qos.logback.classic.Logger;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("customer-panel")
 public class CustomerPanelController {
 
+    Logger logger = ProjectInternalTools.logger;
+
     @PostMapping("/register")
     public void signingCustomer(@RequestBody Customer customer) {
+        logger.info("going to sign in new customer");
         System.out.println(customer.toString());
         //TODO: signing customer to panel
     }
 
-    @GetMapping("/login")
-    public void loginCustomer(@RequestParam String username, @RequestParam String password) {
+    @GetMapping("/login-with-username")
+    public void loginCustomerWithUsername(@RequestParam String username, @RequestParam String password) {
+        logger.info(("going to log in existed customer with its username: " + username));
         System.out.println(username);
         System.out.println(password);
         //TODO: login customer to panel
@@ -24,6 +30,7 @@ public class CustomerPanelController {
 
     @GetMapping("/login")
     public void loginCustomer(@RequestParam String emailOrPhoneNumber) {
+        logger.info("going to log in existed customer with email or phonenumber: " + emailOrPhoneNumber);
         //TODO: check the input is phone number or email address
         //TODO: check the first part of the phoneNumber and parse the final phone number
         System.out.println(emailOrPhoneNumber);
