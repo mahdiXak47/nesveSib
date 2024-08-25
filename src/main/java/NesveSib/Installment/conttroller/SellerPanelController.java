@@ -1,6 +1,6 @@
 package NesveSib.Installment.conttroller;
 
-import NesveSib.Installment.model.Seller;
+import NesveSib.Installment.model.users.Seller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

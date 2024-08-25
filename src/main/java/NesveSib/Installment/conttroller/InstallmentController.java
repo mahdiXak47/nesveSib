@@ -1,7 +1,7 @@
 package NesveSib.Installment.conttroller;
 
 
-import NesveSib.Installment.model.InstallmentCalculationInput;
+import NesveSib.Installment.model.dto.InstallmentCalculationInput;
 import NesveSib.Installment.service.InstallmentCalculatorService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
