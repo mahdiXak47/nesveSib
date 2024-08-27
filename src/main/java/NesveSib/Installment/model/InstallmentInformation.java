@@ -1,9 +1,6 @@
 package NesveSib.Installment.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -17,6 +14,7 @@ import java.util.Date;
 public class InstallmentInformation {
 
     @Id
+//    @GeneratedValue
     @Column(name = "installmentcode")
     private Long installmentCode;
 

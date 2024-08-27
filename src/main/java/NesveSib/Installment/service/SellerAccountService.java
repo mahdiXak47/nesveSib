@@ -4,31 +4,26 @@ package NesveSib.Installment.service;
 import NesveSib.Installment.model.users.Seller;
 import NesveSib.Installment.respository.SellerAccountRepository;
 import NesveSib.Installment.security.PasswordEncryptor;
+import NesveSib.Installment.utils.ProjectInternalTools;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class SellerAccountService {
 
     private final SellerAccountRepository sellerAccountRepository;
-    private final PasswordEncryptor passwordEncryptor;
 
     public SellerAccountService(SellerAccountRepository sellerAccountRepository, PasswordEncryptor passwordEncryptor) {
         this.sellerAccountRepository = sellerAccountRepository;
-        this.passwordEncryptor = passwordEncryptor;
     }
 
 
-    public String trimPhoneNumber(String phoneNumber) {
-        if (phoneNumber.startsWith("09"))
-            return phoneNumber.substring(1);
-        else if (phoneNumber.startsWith("98"))
-            return phoneNumber.substring(2);
-        return phoneNumber;
-    }
+
 
 
     public void createSellerAccount(Seller seller) {
-        seller.setEncryptedPassword(passwordEncryptor.encryptPassword(seller.getEncryptedPassword()));
+        seller.setEncryptedPassword(ProjectInternalTools.passwordEncryptor.encryptPassword(seller.getEncryptedPassword()));
         sellerAccountRepository.save(seller);
     }
 
@@ -36,4 +31,8 @@ public class SellerAccountService {
         return sellerAccountRepository.existsById(nationalId);
     }
 
+    public boolean checkPasswordValidation(String nationalId,String password) {
+        Optional<Seller> seller = sellerAccountRepository.findById(nationalId);
+        return ProjectInternalTools.passwordEncryptor.encryptPassword(password).equals(seller.get().getEncryptedPassword());
+    }
 }

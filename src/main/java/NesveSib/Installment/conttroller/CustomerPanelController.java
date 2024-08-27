@@ -1,8 +1,11 @@
 package NesveSib.Installment.conttroller;
 
+import NesveSib.Installment.exceptions.OutputCode;
 import NesveSib.Installment.model.users.Customer;
+import NesveSib.Installment.service.CustomerAccountService;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,11 +14,26 @@ public class CustomerPanelController {
 
     Logger logger = ProjectInternalTools.logger;
 
-    @PostMapping("/register")
-    public void signingCustomer(@RequestBody Customer customer) {
+    private final CustomerAccountService customerAccountService;
+
+    public CustomerPanelController(CustomerAccountService customerAccountService) {
+        this.customerAccountService = customerAccountService;
+    }
+
+    @PostMapping("/create-new-customer")
+    public ResponseEntity<String> signingCustomer(@RequestBody Customer customer) {
         logger.info("going to sign in new customer");
-        System.out.println(customer.toString());
-        //TODO: signing customer to panel
+//        System.out.println(customer.toString());
+        customer.setPhoneNumber(ProjectInternalTools.trimPhoneNumber(customer.getPhoneNumber()));
+        if (!customerAccountService.checkIfCustomerExisted(customer.getNationalId())) {
+            customerAccountService.createCustomerAccount(customer);
+            logger.info("customer created successfully");
+            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+        }
+        else {
+            logger.info("customer with national id {} exists", customer.getNationalId());
+            return ResponseEntity.ok(OutputCode.ERROR_5001.getCodeMessage());
+        }
     }
 
     @GetMapping("/login-with-username")
@@ -26,6 +44,22 @@ public class CustomerPanelController {
         //TODO: login customer to panel
     }
 
+    @GetMapping("/login-with-nationalId")
+    public ResponseEntity<String> loginCustomerWithNationalId(@RequestParam String nationalId, @RequestParam String password) {
+        logger.info("going to log in as a valid customer with national id {}", nationalId);
+        if(customerAccountService.checkIfCustomerExisted(nationalId)) {
+            if (customerAccountService.checkPasswordValidation(nationalId,password)) {
+                logger.info("customer logged in successfully");
+                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            } else {
+                logger.info("customer password validation failed, password is incorrect");
+                return ResponseEntity.ok(OutputCode.ERROR_5003.getCodeMessage());
+            }
+        } else {
+            logger.info("customer with national id {} does not exist", nationalId);
+            return ResponseEntity.ok(OutputCode.ERROR_5002.getCodeMessage());
+        }
+    }
 
 
     @GetMapping("/login")

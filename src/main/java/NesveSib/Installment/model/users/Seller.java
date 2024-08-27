@@ -4,21 +4,21 @@ package NesveSib.Installment.model.users;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-//@NoArgsConstructor
-//@AllArgsConstructor
 @Table(name = "generalusertbl")
 //@Table(name = "sellertbl")
-public class Seller extends User{
+public class Seller extends User {
 
 //    @NonNull
 //    @Column(name = "storeplate")
 //    private Integer storePlate;
-//
+
 //    @NonNull
 //    @Column(name = "storename")
 //    private String storeName;

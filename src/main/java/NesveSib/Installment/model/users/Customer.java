@@ -38,22 +38,23 @@ public class Customer extends User{
 //    @NonNull
 //    @Column(name = "thirdrelativephonenumber")
 //    private String thirdRelativePhoneNumber;
-
+//
 //    private List<Product> customerPurchasedProducts;
 
-//    @Override
-//    public String toString() {
-//        return "nationalId is " + super.getNationalId() + ", firstName is " + super.getFirstName() + ", lastName is " + super.getLastName()
-//                + "\n, username is " + super.getUsername()
+    @Override
+    public String toString() {
+        return "nationalId is " + super.getNationalId() + ", firstName is " + super.getFirstName() + ", lastName is " + super.getLastName()
+                + "\n, username is " + super.getUsername()
 //                + "\n, fathersName is " + fathersName
-//                + "\n, email is " + super.getEmail()
-//                + "\n, phone number is " + super.getPhoneNumber()
-//                + "\n, address is " + super.getAddress()
-//                + "\n, emailVerified is " + super.isEmailVerified()
-//                + "\n, phoneVerified is " + super.isPhoneVerified()
+                + "\n, email is " + super.getEmail()
+                + "\n, phone number is " + super.getPhoneNumber()
+                + "\n, address is " + super.getAddress()
+                + "\n, emailVerified is " + super.isEmailVerified()
+                + "\n, phoneVerified is " + super.isPhoneVerified()
 //                + "\n, dateOfBirth is " + dateOfBirth
-//                + "\n, encryptedPassword is " + super.getEncryptedPassword()
+                + "\n, encryptedPassword is " + super.getEncryptedPassword()
 //                + "\n, relativePhoneNumber is " + relativePhoneNumber
-//                + "\n, secondRelativePhoneNumber is " + secondRelativePhoneNumber;
-//    }
+//                + "\n, secondRelativePhoneNumber is " + secondRelativePhoneNumber
+        ;
+    }
 }
