@@ -9,6 +9,8 @@ public enum OutputCode {
     ERROR_4003("Customer do not have valid guarantee"),
 
     SUCCESS_2001("operation completed successfully!"),
+
+    ERROR_9999("this part of code is not implemented yet!")
     ;
 
     private final String codeMessage;

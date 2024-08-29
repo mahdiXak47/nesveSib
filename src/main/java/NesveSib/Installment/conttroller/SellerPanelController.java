@@ -6,10 +6,11 @@ import NesveSib.Installment.service.SellerAccountService;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("seller-panel")
+@RequestMapping("/seller-panel")
 public class SellerPanelController {
 
     private final SellerAccountService sellerAccountService;
@@ -55,6 +56,12 @@ public class SellerPanelController {
             logger.info("seller with national id {} does not exist", nationalId);
             return ResponseEntity.ok(OutputCode.ERROR_5002.getCodeMessage());
         }
+    }
+
+    @DeleteMapping("/delete-existed-seller")
+    @PreAuthorize("hasAnyAuthority('seller:write')")
+    public ResponseEntity<String> deleteSellerAccount(@RequestParam String sellerId) {
+        return ResponseEntity.ok(OutputCode.ERROR_9999.getCodeMessage());
     }
 
     /*TODO:
