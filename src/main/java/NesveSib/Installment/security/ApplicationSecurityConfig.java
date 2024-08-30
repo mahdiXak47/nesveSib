@@ -3,6 +3,7 @@ package NesveSib.Installment.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,10 +14,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.concurrent.TimeUnit;
 
 import static NesveSib.Installment.security.ApplicationUserPermission.SELLER_WRITE;
 import static NesveSib.Installment.security.ApplicationUserRule.*;
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -34,14 +37,32 @@ public class ApplicationSecurityConfig {
         http
 //                .csrf( csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .csrf(AbstractHttpConfigurer::disable)
-                 .authorizeHttpRequests(authorize ->
+                .authorizeHttpRequests(authorize ->
                         authorize // orders matters in requestMatchers
                                 .requestMatchers("/", "index", "/css/*", "/js/*").permitAll()
                                 .requestMatchers("/seller-panel/*").hasRole(SELLER.name())
-                                .requestMatchers(HttpMethod.POST,"/seller-panel/*").hasAuthority(SELLER_WRITE.getPermission())
-                                .requestMatchers(HttpMethod.GET,"seller-panel/*").hasAnyRole(ADMIN.name(),SELLER.name())
+                                .requestMatchers(HttpMethod.POST, "/seller-panel/*").hasAuthority(SELLER_WRITE.getPermission())
+                                .requestMatchers(HttpMethod.GET, "seller-panel/*").hasAnyRole(ADMIN.name(), SELLER.name())
                                 .anyRequest().authenticated())
-                .httpBasic(withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/loginPanel")
+                        .passwordParameter("password")
+                        .usernameParameter("username"))
+                .rememberMe(rememberMe -> rememberMe
+                        .rememberMeParameter("remember-me") // default is 2 weeks !
+                        .tokenValiditySeconds((int) TimeUnit.DAYS.toSeconds(21))
+                        .key("somethingverysecure")
+                        .rememberMeParameter("remember-me"))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")) // if csrf is enabled this line should be deleted!
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID","remember-me")
+                        .logoutSuccessUrl("/login"));
+//                .formLogin(Customizer.withDefaults());
         return http.build();
     }
 

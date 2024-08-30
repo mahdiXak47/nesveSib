@@ -64,6 +64,7 @@ public class SellerPanelController {
         return ResponseEntity.ok(OutputCode.ERROR_9999.getCodeMessage());
     }
 
+
     /*TODO:
     *  - edit seller information
     *  - delete existed seller
