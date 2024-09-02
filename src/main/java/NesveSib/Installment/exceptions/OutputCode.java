@@ -7,7 +7,7 @@ public enum OutputCode {
     ERROR_4001("Seller do not have panel in nesve sib system!"),
     ERROR_4002("Customer do not have panel in nesve sib system!"),
     ERROR_4003("Customer do not have valid guarantee"),
-
+    ERROR_4030("You most fill all of required parts to continue"),
     SUCCESS_2001("operation completed successfully!"),
 
     ERROR_9999("this part of code is not implemented yet!")

@@ -3,6 +3,8 @@ package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.model.dto.InstallmentCalculationInput;
 import NesveSib.Installment.service.InstallmentCalculatorService;
+import NesveSib.Installment.utils.ProjectInternalTools;
+import ch.qos.logback.classic.Logger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("installment-settings")
 public class InstallmentController {
+
+    private final Logger logger = ProjectInternalTools.logger;
 
     private final InstallmentCalculatorService calculatorService;
 

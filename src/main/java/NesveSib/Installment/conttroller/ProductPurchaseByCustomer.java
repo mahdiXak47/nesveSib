@@ -4,14 +4,16 @@ package NesveSib.Installment.conttroller;
 import NesveSib.Installment.dataProcessingModel.ProductPurchaseInputs;
 import NesveSib.Installment.exceptions.OutputCode;
 import NesveSib.Installment.service.ProductPurchaseService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import NesveSib.Installment.utils.ProjectInternalTools;
+import ch.qos.logback.classic.Logger;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/customer_product_purchase")
 public class ProductPurchaseByCustomer {
+
+    private final Logger logger = ProjectInternalTools.logger;
 
     private final ProductPurchaseService productPurchaseService;
 
@@ -19,12 +21,28 @@ public class ProductPurchaseByCustomer {
         this.productPurchaseService = productPurchaseService;
     }
 
-
     @PostMapping("/buy_product")
-    public void buyProduct(@RequestBody ProductPurchaseInputs input) {
-        if (productPurchaseService.checkPurchaseRequirements(input).equals(OutputCode.SUCCESS_2001))
-            productPurchaseService.purchaseProduct(input);
+    public ResponseEntity<String> buyProductDirectly(@RequestBody ProductPurchaseInputs input) {
+        if (productPurchaseService.checkPurchaseRequirements(input)) {
+            logger.info("buyProductDirectly: all inputs checked successfully");
+            productPurchaseService.directPurchaseProduct(input);
+            logger.info("buyProductDirectly: data saved in database successfully");
+            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+        }
+        logger.info("buyProductDirectly: inputs are not completely filled");
+        return ResponseEntity.ok(OutputCode.ERROR_4030.getCodeMessage());
+    }
 
+    @PostMapping("/buy_product_in_installment")
+    public ResponseEntity<String> buyProductInInstallment(@RequestBody ProductPurchaseInputs input, @RequestParam Integer numberOfInstallments) {
+        if (productPurchaseService.checkPurchaseRequirements(input)) {
+            logger.info("buyProductInInstallment: all inputs checked successfully");
+            productPurchaseService.installmentPurchaseProduct(input,numberOfInstallments);
+            logger.info("buyProductInInstallment: data saved in database successfully");
+            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+        }
+        logger.info("buyProductInInstallment: inputs are not completely filled");
+        return ResponseEntity.ok(OutputCode.ERROR_4030.getCodeMessage());
     }
 
 
