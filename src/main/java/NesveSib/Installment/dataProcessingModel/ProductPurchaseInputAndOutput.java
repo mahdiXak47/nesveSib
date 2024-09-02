@@ -10,9 +10,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Date;
+
 @Getter
 @RequiredArgsConstructor
-public class ProductPurchaseInputs {
+public class ProductPurchaseInputAndOutput {
 
     @NonNull
     private final Customer customer;
@@ -24,10 +26,10 @@ public class ProductPurchaseInputs {
     private final Seller seller;
 
     @NonNull
-    private final PersianDate purchaseDate;
+    private final Date purchaseDate;
 
     @NonNull
-    private final Money purchaseAmount;
+    private final Double purchaseAmount;
 
 
 }

@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @Entity
@@ -42,6 +44,10 @@ public class ProductPurchasedDetail {
     @NonNull
     @Column(name = "sellernationalid")
     private String sellerNationalId;
+
+    @NonNull
+    @Column
+    private Date purchasedDate;
 
     @Override
     public String toString() {

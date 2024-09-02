@@ -1,22 +1,22 @@
 package NesveSib.Installment.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "productinstallmentdetailtbl")
 public class InstallmentInformation {
 
     @Id
 //    @GeneratedValue
     @Column(name = "installmentcode")
-    private Long installmentCode;
+    private Integer installmentCode;
 
     @NonNull
     @Column(name = "customernationalid")
@@ -28,7 +28,7 @@ public class InstallmentInformation {
 
     @NonNull
     @Column(name = "productid")
-    private String productPurchasedId;
+    private Integer productPurchasedId;
 
     @NonNull
     @Column(name = "sellernationalid")

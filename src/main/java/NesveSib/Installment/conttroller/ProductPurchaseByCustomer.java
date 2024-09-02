@@ -1,7 +1,8 @@
 package NesveSib.Installment.conttroller;
 
 
-import NesveSib.Installment.dataProcessingModel.ProductPurchaseInputs;
+import NesveSib.Installment.dataProcessingModel.InstallmentPurchasedInput;
+import NesveSib.Installment.dataProcessingModel.ProductPurchaseInputAndOutput;
 import NesveSib.Installment.exceptions.OutputCode;
 import NesveSib.Installment.service.ProductPurchaseService;
 import NesveSib.Installment.utils.ProjectInternalTools;
@@ -22,7 +23,7 @@ public class ProductPurchaseByCustomer {
     }
 
     @PostMapping("/buy_product")
-    public ResponseEntity<String> buyProductDirectly(@RequestBody ProductPurchaseInputs input) {
+    public ResponseEntity<String> buyProductDirectly(@RequestBody ProductPurchaseInputAndOutput input) {
         if (productPurchaseService.checkPurchaseRequirements(input)) {
             logger.info("buyProductDirectly: all inputs checked successfully");
             productPurchaseService.directPurchaseProduct(input);
@@ -34,15 +35,26 @@ public class ProductPurchaseByCustomer {
     }
 
     @PostMapping("/buy_product_in_installment")
-    public ResponseEntity<String> buyProductInInstallment(@RequestBody ProductPurchaseInputs input, @RequestParam Integer numberOfInstallments) {
+    public ResponseEntity<String> buyProductInInstallment(@RequestBody InstallmentPurchasedInput input) {
         if (productPurchaseService.checkPurchaseRequirements(input)) {
             logger.info("buyProductInInstallment: all inputs checked successfully");
-            productPurchaseService.installmentPurchaseProduct(input,numberOfInstallments);
+            productPurchaseService.installmentPurchaseProduct(input);
             logger.info("buyProductInInstallment: data saved in database successfully");
             return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
         }
         logger.info("buyProductInInstallment: inputs are not completely filled");
         return ResponseEntity.ok(OutputCode.ERROR_4030.getCodeMessage());
+    }
+
+
+    @GetMapping("/get_purchased_product_details")
+    public ProductPurchaseInputAndOutput getPurchasedProductDetails(@RequestParam Integer productCode) {
+        if (productPurchaseService.productFound(productCode)) {
+            logger.info("getPurchasedProductDetails: product found");
+            return productPurchaseService.getPurchasedProductDetails(productCode);
+        }
+        logger.info("getPurchasedProductDetails: product not found with this product code");
+        return null;
     }
 
 
