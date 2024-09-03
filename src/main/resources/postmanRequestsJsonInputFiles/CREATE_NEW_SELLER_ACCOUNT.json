@@ -1,12 +1,12 @@
 {
-  "nationalId": "0150554427",
-  "username": "mahdixak",
   "firstName": "mahdi",
   "lastName": "akbari",
-  "email": "mahdiamcfc@gmail.com",
-  "emailVerified": false,
+  "username": "mahdixak",
+  "nationalId": "0150554427",
   "phoneNumber": "09308818806",
-  "address": "khiaban azadi, khiaban roodaki, kooche kasab kar, plake 1",
-  "storePlate": 265,
+  "email": "mahdiamcfc@gmail.com",
+  "storeAddress": "khiaban azadi, khiaban roodaki, kooche kasab kar, plake 1",
+  "storePlate": 186,
+  "storeName": "mahdiXphone",
   "password": "12345"
 }

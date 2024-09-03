@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/customer_product_purchase")
 public class ProductPurchaseByCustomer {
 
-    private final Logger logger = ProjectInternalTools.logger;
+    private final Logger logger = ProjectInternalTools.getLogger(ProductPurchaseByCustomer.class.getName());
 
     private final ProductPurchaseService productPurchaseService;
 

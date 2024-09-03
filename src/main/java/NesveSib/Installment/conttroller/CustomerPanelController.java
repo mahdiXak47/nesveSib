@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("customer-panel")
 public class CustomerPanelController {
 
-    private final Logger logger = ProjectInternalTools.logger;
+    private final Logger logger = ProjectInternalTools.getLogger(CustomerPanelController.class.getName());
 
     private final CustomerAccountService customerAccountService;
 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("installment-settings")
 public class InstallmentController {
 
-    private final Logger logger = ProjectInternalTools.logger;
+    private final Logger logger = ProjectInternalTools.getLogger(InstallmentController.class.getName());
 
     private final InstallmentCalculatorService calculatorService;
 

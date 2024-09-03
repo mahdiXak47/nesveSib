@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class IseApplication {
 
 	public static void main(String[] args) {
-		ProjectInternalTools.logger.info("starting project");
+		ProjectInternalTools.getLogger(IseApplication.class.getName()).info("starting project");
 		SpringApplication.run(IseApplication.class, args);
 	}
 

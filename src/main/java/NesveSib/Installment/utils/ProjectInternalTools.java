@@ -2,13 +2,16 @@ package NesveSib.Installment.utils;
 
 import NesveSib.Installment.security.PasswordEncryptor;
 import ch.qos.logback.classic.Logger;
+import lombok.extern.java.Log;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProjectInternalTools {
 
-    public static Logger logger = (Logger) LoggerFactory.getILoggerFactory().getLogger("log");
+    public static Logger getLogger(String className) {
+        return (Logger) LoggerFactory.getILoggerFactory().getLogger(className);
+    }
 
     public static PasswordEncryptor passwordEncryptor = new PasswordEncryptor();
 

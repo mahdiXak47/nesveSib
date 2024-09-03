@@ -2,22 +2,57 @@ package NesveSib.Installment.model.users;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
 
-import java.util.Date;
-
-
-
 @Getter
 @Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "generalusertbl")
 //@Table(name = "customertbl")
-public class Customer extends User{
+public class Customer {
+    @NonNull
+    @Column(name = "nationalid")
+    @Id
+    private String nationalId;
+
+    @NonNull
+    @Column(name = "username")
+    private String username;
+
+    @NonNull
+    @Column(name = "firstname")
+    private String firstName;
+
+    @NonNull
+    @Column(name = "lastname")
+    private String lastName;
+
+    @NonNull
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "emailverified")
+    private boolean emailVerified;
+
+    @NonNull
+    @Column(name = "address")
+    private String address;
+
+    @NonNull
+    @Column(name = "phonenumber")
+    private String phoneNumber;
+
+    @Column(name = "phoneverified")
+    private boolean phoneVerified;
+
+    @NonNull
+    @Column(name = "encryptedpassword")
+    private String encryptedPassword;
 
 //    @NonNull
 //    @Column(name = "fathersname")
@@ -43,16 +78,16 @@ public class Customer extends User{
 
     @Override
     public String toString() {
-        return "nationalId is " + super.getNationalId() + ", firstName is " + super.getFirstName() + ", lastName is " + super.getLastName()
-                + "\n, username is " + super.getUsername()
+        return "nationalId is " + this.getNationalId() + ", firstName is " + this.getFirstName() + ", lastName is " + this.getLastName()
+                + "\n, username is " + this.getUsername()
 //                + "\n, fathersName is " + fathersName
-                + "\n, email is " + super.getEmail()
-                + "\n, phone number is " + super.getPhoneNumber()
-                + "\n, address is " + super.getAddress()
-                + "\n, emailVerified is " + super.isEmailVerified()
-                + "\n, phoneVerified is " + super.isPhoneVerified()
+                + "\n, email is " + this.getEmail()
+                + "\n, phone number is " + this.getPhoneNumber()
+                + "\n, address is " + this.getAddress()
+                + "\n, emailVerified is " + this.isEmailVerified()
+                + "\n, phoneVerified is " + this.isPhoneVerified()
 //                + "\n, dateOfBirth is " + dateOfBirth
-                + "\n, encryptedPassword is " + super.getEncryptedPassword()
+                + "\n, encryptedPassword is " + this.getEncryptedPassword()
 //                + "\n, relativePhoneNumber is " + relativePhoneNumber
 //                + "\n, secondRelativePhoneNumber is " + secondRelativePhoneNumber
         ;
