@@ -6,14 +6,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
+import java.util.Date;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "generalusertbl")
-//@Table(name = "customertbl")
+@Table(name = "customertbl")
 public class Customer {
     @NonNull
     @Column(name = "nationalid")
@@ -21,8 +22,8 @@ public class Customer {
     private String nationalId;
 
     @NonNull
-    @Column(name = "username")
-    private String username;
+    @Column(name = "fathersname")
+    private String fathersName;
 
     @NonNull
     @Column(name = "firstname")
@@ -54,42 +55,37 @@ public class Customer {
     @Column(name = "encryptedpassword")
     private String encryptedPassword;
 
-//    @NonNull
-//    @Column(name = "fathersname")
-//    private String fathersName;
-//
-//    @NonNull
-//    @Column(name = "dateofbirth")
-//    private Date dateOfBirth;
-//
-//    @NonNull
-//    @Column(name = "firstrelativephonenumber")
-//    private String relativePhoneNumber;
-//
-//    @NonNull
-//    @Column(name = "secondrelativephonenumber")
-//    private String secondRelativePhoneNumber;
-//
-//    @NonNull
-//    @Column(name = "thirdrelativephonenumber")
-//    private String thirdRelativePhoneNumber;
-//
+    @NonNull
+    @Column(name = "dateofbirth")
+    private Date dateOfBirth;
+
+    @NonNull
+    @Column(name = "firstrelativephonenumber")
+    private String relativePhoneNumber;
+
+    @NonNull
+    @Column(name = "secondrelativephonenumber")
+    private String secondRelativePhoneNumber;
+
+    @NonNull
+    @Column(name = "thirdrelativephonenumber")
+    private String thirdRelativePhoneNumber;
+
 //    private List<Product> customerPurchasedProducts;
 
     @Override
     public String toString() {
-        return "nationalId is " + this.getNationalId() + ", firstName is " + this.getFirstName() + ", lastName is " + this.getLastName()
-                + "\n, username is " + this.getUsername()
-//                + "\n, fathersName is " + fathersName
-                + "\n, email is " + this.getEmail()
-                + "\n, phone number is " + this.getPhoneNumber()
-                + "\n, address is " + this.getAddress()
-                + "\n, emailVerified is " + this.isEmailVerified()
-                + "\n, phoneVerified is " + this.isPhoneVerified()
-//                + "\n, dateOfBirth is " + dateOfBirth
-                + "\n, encryptedPassword is " + this.getEncryptedPassword()
-//                + "\n, relativePhoneNumber is " + relativePhoneNumber
-//                + "\n, secondRelativePhoneNumber is " + secondRelativePhoneNumber
+        return "nationalId is " + this.nationalId + ", firstName is " + this.firstName + ", lastName is " + this.lastName
+                + "\n, fathersName is " + this.fathersName
+                + "\n, email is " + this.email
+                + "\n, phone number is " + this.phoneNumber
+                + "\n, address is " + this.address
+                + "\n, emailVerified is " + this.emailVerified
+                + "\n, phoneVerified is " + this.phoneVerified
+                + "\n, dateOfBirth is " + this.dateOfBirth
+                + "\n, encryptedPassword is " + this.encryptedPassword
+                + "\n, relativePhoneNumber is " + this.relativePhoneNumber
+                + "\n, secondRelativePhoneNumber is " + this.secondRelativePhoneNumber
         ;
     }
 }

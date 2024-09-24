@@ -2,6 +2,8 @@ package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.exceptions.OutputCode;
 import NesveSib.Installment.model.users.Customer;
+import NesveSib.Installment.requestInputs.NewCustomerRequestInput;
+import NesveSib.Installment.requestInputs.NewSellerRequestInput;
 import NesveSib.Installment.service.CustomerAccountService;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
@@ -9,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("customer-panel")
+@RequestMapping("/customer-panel")
 public class CustomerPanelController {
 
     private final Logger logger = ProjectInternalTools.getLogger(CustomerPanelController.class.getName());
@@ -20,25 +22,24 @@ public class CustomerPanelController {
         this.customerAccountService = customerAccountService;
     }
 
-    @PostMapping("/create-new-customer")
-    public ResponseEntity<String> signingCustomer(@RequestBody Customer customer) {
-        logger.info("going to sign in new customer");
+    @PostMapping("/new-customer")
+    public ResponseEntity<String> signingCustomer(@RequestBody NewCustomerRequestInput customer) {
+        logger.info("signingCustomer: going to sign in new customer");
 //        System.out.println(customer.toString());
-        customer.setPhoneNumber(ProjectInternalTools.trimPhoneNumber(customer.getPhoneNumber()));
         if (!customerAccountService.checkIfCustomerExisted(customer.getNationalId())) {
             customerAccountService.createCustomerAccount(customer);
-            logger.info("customer created successfully");
+            logger.info("signingCustomer: customer created successfully");
             return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
         }
         else {
-            logger.info("customer with national id {} exists", customer.getNationalId());
+            logger.info("signingCustomer: customer with national id {} exists", customer.getNationalId());
             return ResponseEntity.ok(OutputCode.ERROR_5001.getCodeMessage());
         }
     }
 
     @GetMapping("/login-with-username")
     public void loginCustomerWithUsername(@RequestParam String username, @RequestParam String password) {
-        logger.info(("going to log in existed customer with its username: " + username));
+        logger.info("loginCustomerWithUsername: going to log in existed customer with its username: " + username);
         System.out.println(username);
         System.out.println(password);
         //TODO: login customer to panel
@@ -46,17 +47,17 @@ public class CustomerPanelController {
 
     @GetMapping("/login-with-nationalId")
     public ResponseEntity<String> loginCustomerWithNationalId(@RequestParam String nationalId, @RequestParam String password) {
-        logger.info("going to log in as a valid customer with national id {}", nationalId);
+        logger.info("loginCustomerWithNationalId: going to log in as a valid customer with national id {}", nationalId);
         if(customerAccountService.checkIfCustomerExisted(nationalId)) {
             if (customerAccountService.checkPasswordValidation(nationalId,password)) {
-                logger.info("customer logged in successfully");
+                logger.info("loginCustomerWithNationalId: customer logged in successfully");
                 return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
             } else {
-                logger.info("customer password validation failed, password is incorrect");
+                logger.info("loginCustomerWithNationalId: customer password validation failed, password is incorrect");
                 return ResponseEntity.ok(OutputCode.ERROR_5003.getCodeMessage());
             }
         } else {
-            logger.info("customer with national id {} does not exist", nationalId);
+            logger.info("loginCustomerWithNationalId: customer with national id {} does not exist", nationalId);
             return ResponseEntity.ok(OutputCode.ERROR_5002.getCodeMessage());
         }
     }

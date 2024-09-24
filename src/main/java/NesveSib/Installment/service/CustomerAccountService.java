@@ -1,15 +1,21 @@
 package NesveSib.Installment.service;
 
 import NesveSib.Installment.model.users.Customer;
+import NesveSib.Installment.requestInputs.NewCustomerRequestInput;
 import NesveSib.Installment.respository.CustomerAccountRepository;
 import NesveSib.Installment.utils.ProjectInternalTools;
+import ch.qos.logback.classic.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static NesveSib.Installment.utils.ProjectInternalTools.passwordEncryptor;
+import static NesveSib.Installment.utils.ProjectInternalTools.trimPhoneNumber;
+
 @Service
 public class CustomerAccountService {
 
+    private final Logger logger = ProjectInternalTools.getLogger(CustomerAccountService.class.getName());
 
     private final CustomerAccountRepository customerAccountRepository;
 
@@ -22,13 +28,21 @@ public class CustomerAccountService {
         return customerAccountRepository.existsById(nationalId);
     }
 
-    public void createCustomerAccount(Customer customer) {
-        customer.setEncryptedPassword(ProjectInternalTools.passwordEncryptor.encryptPassword(customer.getEncryptedPassword()));
+    public void createCustomerAccount(NewCustomerRequestInput input) {
+        Customer customer = new Customer(input.getNationalId(),input.getFathersName(),input.getFirstName(),input.getLastName(),
+                input.getEmail(),false,input.getAddress(),input.getPhoneNumber(),false,input.getPassword(),
+                input.getDateOfBirth(),input.getFirstRelativePhoneNumber(),input.getSecondRelativePhoneNumber(), input.getThirdRelativePhoneNumber());
+        customer.setEncryptedPassword(passwordEncryptor.encryptPassword(customer.getEncryptedPassword()));
+        customer.setPhoneNumber(trimPhoneNumber(customer.getPhoneNumber()));
+        customer.setRelativePhoneNumber(trimPhoneNumber(customer.getRelativePhoneNumber()));
+        customer.setSecondRelativePhoneNumber(trimPhoneNumber(customer.getSecondRelativePhoneNumber()));
+        customer.setThirdRelativePhoneNumber(trimPhoneNumber(customer.getThirdRelativePhoneNumber()));
         customerAccountRepository.save(customer);
+        logger.info("createCustomerAccount: Customer account created");
     }
 
     public boolean checkPasswordValidation(String nationalId, String password) {
         Optional<Customer> customer = customerAccountRepository.findById(nationalId);
-        return ProjectInternalTools.passwordEncryptor.encryptPassword(password).equals(customer.get().getEncryptedPassword());
+        return passwordEncryptor.encryptPassword(password).equals(customer.get().getEncryptedPassword());
     }
 }

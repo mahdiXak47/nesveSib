@@ -2,10 +2,12 @@ package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.exceptions.OutputCode;
 import NesveSib.Installment.model.users.Seller;
+import NesveSib.Installment.requestInputs.LoginRequestCheckInput;
 import NesveSib.Installment.requestInputs.NewSellerRequestInput;
 import NesveSib.Installment.service.SellerAccountService;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import static NesveSib.Installment.exceptions.OutputCode.*;
 @RequestMapping("/seller-panel")
 public class SellerPanelController {
 
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SellerPanelController.class);
     private final SellerAccountService sellerAccountService;
     private final Logger logger = ProjectInternalTools.getLogger(SellerPanelController.class.getName());
 
@@ -96,6 +99,14 @@ public class SellerPanelController {
         }
         logger.info("loginAsValidSellerWithPhonenumber: seller with phone number {} does not exist", phonenumber);
         return ResponseEntity.ok(OutputCode.ERROR_5006.getCodeMessage());
+    }
+
+    @PostMapping("/login-request-check")
+    public ResponseEntity<String> loginRequestCheck(@RequestBody LoginRequestCheckInput input) {
+        //TODO: check the input and password validations then send the request to service
+        logger.info("loginRequestCheck: going to login request check");
+        System.out.println(input.getInput() + " - " + input.getPassword());
+        return ResponseEntity.ok("bravo 6 radio check? , loud and clear dispatch!");
     }
 
 
