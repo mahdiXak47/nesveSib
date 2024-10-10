@@ -1,41 +1,49 @@
 package NesveSib.Installment.model.productModels;
 
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.*;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "generalproducttbl")
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "general_product_tbl")
 public class Product {
 
     @Id
 //    @GeneratedValue
-    @Column(name = "productcode")
+    //TODO: implementation of generating unique keys for each product in database
+    @Column(name = "product_code")
     private Integer productCode;
 
     @NonNull
-    @Column(name = "productname")
+    @Column(name = "product_name")
     private String productName;
 
     @NonNull
-    @Column(name = "productcategory")
+    @Column(name = "product_category")
     private String productCategory;
 
     @NonNull
-    @Column(name = "productmodel")
+    @Column(name = "product_model")
     private String productModel;
 
     @NonNull
-    @Column(name = "productserialnumber")
-    private String productSerialNumber;
+    @Column(name = "product_serial_number")
+    private String productSerialNumber; // if the product is mobile it has to be first IMEI
+
+    @Column(name = "product_imei")
+    private String productImei;
 
     @NonNull
-    @Column(name = "productcolor")
+    @Column(name = "product_color")
     private String productColor;
+
 
     @Override
     public String toString() {

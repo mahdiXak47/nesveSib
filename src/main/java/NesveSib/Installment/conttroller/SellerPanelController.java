@@ -7,9 +7,7 @@ import NesveSib.Installment.requestInputs.NewSellerRequestInput;
 import NesveSib.Installment.service.SellerAccountService;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
 
 import static NesveSib.Installment.exceptions.OutputCode.*;
@@ -18,7 +16,6 @@ import static NesveSib.Installment.exceptions.OutputCode.*;
 @RequestMapping("/seller-panel")
 public class SellerPanelController {
 
-    private static final org.slf4j.Logger log = LoggerFactory.getLogger(SellerPanelController.class);
     private final SellerAccountService sellerAccountService;
     private final Logger logger = ProjectInternalTools.getLogger(SellerPanelController.class.getName());
 
@@ -72,7 +69,7 @@ public class SellerPanelController {
     }
 
     @GetMapping("/login-with-email")
-        public ResponseEntity<String> loginAsValidSellerWithEmail(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<String> loginAsValidSellerWithEmail(@RequestParam String email, @RequestParam String password) {
         if (sellerAccountService.checkIfSellerExistedWithThisEmail(email)) {
             if (sellerAccountService.checkPasswordValidationWithEmail(email, password)) {
                 logger.info("loginAsValidSellerWithEmail: seller logged in successfully");
@@ -89,7 +86,7 @@ public class SellerPanelController {
     @GetMapping("login-with-phonenumber")
     public ResponseEntity<String> loginAsValidSellerWithPhonenumber(@RequestParam String phonenumber, @RequestParam String password) {
         if (sellerAccountService.checkIfSellerExistedWithThisPhoneNumber(phonenumber)) {
-            if (sellerAccountService.checkPasswordValidationWithPhoneNumber(phonenumber,password)) {
+            if (sellerAccountService.checkPasswordValidationWithPhoneNumber(phonenumber, password)) {
                 logger.info("loginAsValidSellerWithPhonenumber: seller logged in successfully");
                 Seller seller = sellerAccountService.getSellerWithPhoneNumber(phonenumber);
                 return ResponseEntity.ok(SUCCESS_2001.getCodeMessage() + "\n" + seller.toString());
@@ -103,10 +100,21 @@ public class SellerPanelController {
 
     @PostMapping("/login-request-check")
     public ResponseEntity<String> loginRequestCheck(@RequestBody LoginRequestCheckInput input) {
-        //TODO: check the input and password validations then send the request to service
         logger.info("loginRequestCheck: going to login request check");
-        System.out.println(input.getInput() + " - " + input.getPassword());
-        return ResponseEntity.ok("bravo 6 radio check? , loud and clear dispatch!");
+        switch (sellerAccountService.checkLoginInputType(input.getInput())) {
+            case "email":
+                logger.info("loginRequestCheck: going to login with email address");
+                loginAsValidSellerWithEmail(input.getInput(), input.getPassword());
+                break;
+            case "phoneNumber":
+                logger.info("loginRequestCheck: going to login with phone number");
+                loginAsValidSellerWithPhonenumber(input.getInput(), input.getPassword());
+                break;
+            case "invalid":
+                logger.info("loginRequestCheck: input entered is invalid!");
+                return ResponseEntity.ok(OutputCode.ERROR_4004.getCodeMessage());
+        }
+        return ResponseEntity.ok("it will never reach here!");
     }
 
 

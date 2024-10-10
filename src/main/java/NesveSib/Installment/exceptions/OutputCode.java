@@ -12,8 +12,9 @@ public enum OutputCode {
     ERROR_4003("Customer do not have valid guarantee"),
     ERROR_4030("You most fill all of required parts to continue"),
     SUCCESS_2001("operation completed successfully!"),
-
-    ERROR_9999("this part of code is not implemented yet!")
+    ERROR_4004("input is invalid, type email address of phoneNumber"),
+    ERROR_9999("this part of code is not implemented yet!"),
+    ERROR_8888("data not added to the database!")
     ;
 
     private final String codeMessage;
