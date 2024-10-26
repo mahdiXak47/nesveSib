@@ -11,65 +11,64 @@ import java.util.Date;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "customertbl")
+@Table(name = "customer_tbl")
 public class Customer {
     @NonNull
-    @Column(name = "nationalid")
+    @Column(name = "national_id")
     @Id
     private String nationalId;
 
-    @NonNull
-    @Column(name = "fathersname")
+    @Column(name = "fathers_name")
     private String fathersName;
 
-    @NonNull
-    @Column(name = "firstname")
+    @Column(name = "first_name")
     private String firstName;
 
-    @NonNull
-    @Column(name = "lastname")
+    @Column(name = "last_name")
     private String lastName;
 
-    @NonNull
     @Column(name = "email")
     private String email;
 
-    @Column(name = "emailverified")
+    @Column(name = "email_verified")
     private boolean emailVerified;
 
-    @NonNull
     @Column(name = "address")
     private String address;
 
     @NonNull
-    @Column(name = "phonenumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "phoneverified")
+    @Column(name = "phone_verified")
     private boolean phoneVerified;
 
     @NonNull
-    @Column(name = "encryptedpassword")
+    @Column(name = "encrypted_password")
     private String encryptedPassword;
 
-    @NonNull
-    @Column(name = "dateofbirth")
+    @Column(name = "date_of_birth")
     private Date dateOfBirth;
 
-    @NonNull
-    @Column(name = "firstrelativephonenumber")
+    @Column(name = "first_relative_phone_number")
     private String relativePhoneNumber;
 
-    @NonNull
-    @Column(name = "secondrelativephonenumber")
+    @Column(name = "second_relative_phone_number")
     private String secondRelativePhoneNumber;
 
-    @NonNull
-    @Column(name = "thirdrelativephonenumber")
+    @Column(name = "third_relative_phone_number")
     private String thirdRelativePhoneNumber;
+
+    public Customer(@NonNull String nationalId, @NonNull String phoneNumber, @NonNull String password) {
+        this.nationalId = nationalId;
+        this.phoneNumber = phoneNumber;
+        this.encryptedPassword = password;
+    }
+
+    public Customer() {
+
+    }
 
 //    private List<Product> customerPurchasedProducts;
 

@@ -22,17 +22,18 @@ public class CustomerPanelController {
         this.customerAccountService = customerAccountService;
     }
 
-    @PostMapping("/new-customer")
-    public ResponseEntity<String> signingCustomer(@RequestBody NewCustomerRequestInput customer) {
+    @CrossOrigin(origins = "http://localhost:5173") // Adjust the origin as needed
+    @PostMapping("/signing-new-customer")
+    public ResponseEntity<String> signingNewCustomer(@RequestBody NewCustomerRequestInput customer) {
         logger.info("signingCustomer: going to sign in new customer");
 //        System.out.println(customer.toString());
-        if (!customerAccountService.checkIfCustomerExisted(customer.getNationalId())) {
-            customerAccountService.createCustomerAccount(customer);
+        if (!customerAccountService.checkIfCustomerExisted(customer.national_number())) {
+            customerAccountService.createRawCustomerAccount(customer);
             logger.info("signingCustomer: customer created successfully");
             return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
         }
         else {
-            logger.info("signingCustomer: customer with national id {} exists", customer.getNationalId());
+            logger.info("signingCustomer: customer with national id {} exists", customer.national_number());
             return ResponseEntity.ok(OutputCode.ERROR_5001.getCodeMessage());
         }
     }

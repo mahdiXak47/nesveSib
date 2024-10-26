@@ -1,6 +1,6 @@
 package NesveSib.Installment.model.dto;
 
 
-public record InstallmentCalculationInput(int numOfInstallments, double amountToCalculate, String guarantee) {
+public record InstallmentCalculationInput(int numOfInstallments, double amountToCalculate, String guarantee, int productInterestPerCent) {
 
 }

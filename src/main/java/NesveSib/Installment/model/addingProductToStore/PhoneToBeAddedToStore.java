@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class PhoneAddedToStore {
+public class PhoneToBeAddedToStore {
 
     private final String phoneName;
 

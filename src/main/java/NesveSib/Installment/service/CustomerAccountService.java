@@ -28,21 +28,29 @@ public class CustomerAccountService {
         return customerAccountRepository.existsById(nationalId);
     }
 
+
+
     public void createCustomerAccount(NewCustomerRequestInput input) {
-        Customer customer = new Customer(input.getNationalId(),input.getFathersName(),input.getFirstName(),input.getLastName(),
-                input.getEmail(),false,input.getAddress(),input.getPhoneNumber(),false,input.getPassword(),
-                input.getDateOfBirth(),input.getFirstRelativePhoneNumber(),input.getSecondRelativePhoneNumber(), input.getThirdRelativePhoneNumber());
-        customer.setEncryptedPassword(passwordEncryptor.encryptPassword(customer.getEncryptedPassword()));
-        customer.setPhoneNumber(trimPhoneNumber(customer.getPhoneNumber()));
-        customer.setRelativePhoneNumber(trimPhoneNumber(customer.getRelativePhoneNumber()));
-        customer.setSecondRelativePhoneNumber(trimPhoneNumber(customer.getSecondRelativePhoneNumber()));
-        customer.setThirdRelativePhoneNumber(trimPhoneNumber(customer.getThirdRelativePhoneNumber()));
-        customerAccountRepository.save(customer);
-        logger.info("createCustomerAccount: Customer account created");
+//        Customer customer = new Customer(input.getNationalId(),input.getFathersName(),input.getFirstName(),input.getLastName(),
+//                input.getEmail(),false,input.getAddress(),input.getPhoneNumber(),false,input.password(),
+//                input.getDateOfBirth(),input.getFirstRelativePhoneNumber(),input.getSecondRelativePhoneNumber(), input.getThirdRelativePhoneNumber());
+
+//        customer.setRelativePhoneNumber(trimPhoneNumber(customer.getRelativePhoneNumber()));
+//        customer.setSecondRelativePhoneNumber(trimPhoneNumber(customer.getSecondRelativePhoneNumber()));
+//        customer.setThirdRelativePhoneNumber(trimPhoneNumber(customer.getThirdRelativePhoneNumber()));
+
     }
 
     public boolean checkPasswordValidation(String nationalId, String password) {
         Optional<Customer> customer = customerAccountRepository.findById(nationalId);
         return passwordEncryptor.encryptPassword(password).equals(customer.get().getEncryptedPassword());
+    }
+
+    public void createRawCustomerAccount(NewCustomerRequestInput input) {
+        Customer customer = new Customer(input.national_number(),input.phone_number(),input.password());
+        customer.setEncryptedPassword(passwordEncryptor.encryptPassword(customer.getEncryptedPassword()));
+        customer.setPhoneNumber(trimPhoneNumber(input.phone_number()));
+        customerAccountRepository.save(customer);
+        logger.info("createCustomerAccount: Customer account created");
     }
 }

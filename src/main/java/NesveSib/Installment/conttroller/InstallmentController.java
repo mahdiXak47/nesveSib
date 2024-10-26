@@ -25,7 +25,7 @@ public class InstallmentController {
 
     @PostMapping("/installment-calculation")
     public Double installmentCalculation(@RequestBody InstallmentCalculationInput input) {
-        return calculatorService.calculationOfInstallmentPayment(input.numOfInstallments(),input.amountToCalculate(),input.guarantee());
+        return calculatorService.calculationOfInstallmentPayment(input.numOfInstallments(),input.amountToCalculate(),input.guarantee(),input.productInterestPerCent());
     }
 
     /*TODO:

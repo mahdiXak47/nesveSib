@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 public class InstallmentCalculatorService {
 
     // function to calculate the amount of installments for installment payment
-    public double calculationOfInstallmentPayment(int numOfInstallments, double originalPrice, String type) {
+    public double calculationOfInstallmentPayment(int numOfInstallments, double originalPrice, String type,int productInterestPerCent) {
         double calculatedValue = 0;
-        originalPrice += originalPrice * 15 / 100;
+        originalPrice += originalPrice * productInterestPerCent / 100;
         double x = originalPrice;
-        if (type.equals(TypeOfGuarantee.CHEK.toString()))
+        TypeOfGuarantee typeOfGuarantee = TypeOfGuarantee.evaluate(type);
+        if (typeOfGuarantee.equals(TypeOfGuarantee.CHEK))
             calculatedValue = x + (x * 25 / 1000);
-        else if (type.equals(TypeOfGuarantee.SAFTE.toString()))
+        else if (typeOfGuarantee.equals(TypeOfGuarantee.SAFTE))
             calculatedValue = x * 35 / 1000;
         calculatedValue = (calculatedValue * (numOfInstallments + 1) + x) / numOfInstallments;
         return calculatedValue;
