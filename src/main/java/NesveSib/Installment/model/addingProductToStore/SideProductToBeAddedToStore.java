@@ -12,7 +12,7 @@ public class SideProductToBeAddedToStore {
 
     private final String sideProductName;
 
-    private final int numberOfProductAvailable;
+    private final Integer numberOfProductAvailable;
 
     private final Long productPurchaseBySellerCost;
 }

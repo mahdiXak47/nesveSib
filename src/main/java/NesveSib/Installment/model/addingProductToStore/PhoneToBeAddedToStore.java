@@ -7,38 +7,34 @@ import lombok.Getter;
 @Getter
 public class PhoneToBeAddedToStore {
 
-    private final String phoneName;
-
-    private final PhoneHealth phoneHealth;
-
     private final String phoneModel;
 
-    private final PhoneStorage phoneStorage;
+    private final String phoneType;
 
     private final String phoneColor;
 
     private final String phonePartNumber;
 
-    private final Long phonePurchasedBySellerCost;
+    private final String phoneStorage;
 
-    private final Long phoneBatteryHealth;
+    private final String phoneFirstIMEI;
 
-    private final String firstIMEI;
+    private final String phoneSecondIMEI;
 
-    private final String secondIMEI;
+    private final String phonePurchasedCost;
 
     @Override
     public String toString() {
         return "PhoneAddedToStore{" +
-                "phoneHealthType=" + phoneHealth +
+//                "phoneHealthType=" + phoneHealth +
                 ", phoneModel='" + phoneModel + '\'' +
                 ", phoneStorage=" + phoneStorage +
                 ", phoneColor='" + phoneColor + '\'' +
                 ", phonePartNumber='" + phonePartNumber + '\'' +
-                ", phonePurchasedBySellerCost=" + phonePurchasedBySellerCost +
-                ", firstIMEI=" + firstIMEI +
-                ", secondIMEI=" + secondIMEI +
-                ", phoneBatteryHealth=" + phoneBatteryHealth + "%" +
+//                ", phonePurchasedBySellerCost=" + phonePurchasedBySellerCost +
+//                ", firstIMEI=" + firstIMEI +
+//                ", secondIMEI=" + secondIMEI +
+//                ", phoneBatteryHealth=" + phoneBatteryHealth + "%" +
                 '}';
     }
 }

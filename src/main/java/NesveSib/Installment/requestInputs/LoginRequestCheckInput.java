@@ -7,13 +7,13 @@ import lombok.NonNull;
 public class LoginRequestCheckInput {
 
     @NonNull
-    private final String input;
+    private final String nationalId;
 
     @NonNull
     private final String password;
 
     public LoginRequestCheckInput(@NonNull String input, @NonNull String password) {
-        this.input = input;
+        this.nationalId = input;
         this.password = password;
     }
 }

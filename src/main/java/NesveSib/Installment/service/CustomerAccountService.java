@@ -1,7 +1,7 @@
 package NesveSib.Installment.service;
 
 import NesveSib.Installment.model.users.Customer;
-import NesveSib.Installment.requestInputs.NewCustomerRequestInput;
+import NesveSib.Installment.requestInputs.NewUserRequestInput;
 import NesveSib.Installment.respository.CustomerAccountRepository;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
@@ -24,13 +24,16 @@ public class CustomerAccountService {
     }
 
 
-    public boolean checkIfCustomerExisted(String nationalId) {
-        return customerAccountRepository.existsById(nationalId);
+    public boolean checkIfCustomerExisted(String toBeChecked, int type) {
+        return switch (type) {
+            case 1 -> customerAccountRepository.findByNationalId(toBeChecked).isPresent();
+            case 2 -> customerAccountRepository.findByPhoneNumber(toBeChecked).isPresent();
+            default -> false;
+        };
     }
 
 
-
-    public void createCustomerAccount(NewCustomerRequestInput input) {
+    public void createCustomerAccount(NewUserRequestInput input) {
 //        Customer customer = new Customer(input.getNationalId(),input.getFathersName(),input.getFirstName(),input.getLastName(),
 //                input.getEmail(),false,input.getAddress(),input.getPhoneNumber(),false,input.password(),
 //                input.getDateOfBirth(),input.getFirstRelativePhoneNumber(),input.getSecondRelativePhoneNumber(), input.getThirdRelativePhoneNumber());
@@ -46,8 +49,8 @@ public class CustomerAccountService {
         return passwordEncryptor.encryptPassword(password).equals(customer.get().getEncryptedPassword());
     }
 
-    public void createRawCustomerAccount(NewCustomerRequestInput input) {
-        Customer customer = new Customer(input.national_number(),input.phone_number(),input.password());
+    public void createRawCustomerAccount(NewUserRequestInput input) {
+        Customer customer = new Customer(input.national_number(), input.phone_number(), input.password());
         customer.setEncryptedPassword(passwordEncryptor.encryptPassword(customer.getEncryptedPassword()));
         customer.setPhoneNumber(trimPhoneNumber(input.phone_number()));
         customerAccountRepository.save(customer);

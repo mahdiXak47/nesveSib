@@ -1,76 +1,79 @@
 package NesveSib.Installment.model.users;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import NesveSib.Installment.model.productModels.Product;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "sellertbl")
+@Table(name = "seller_tbl", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "national_id"),
+        @UniqueConstraint(columnNames = "phone_number")
+})
 public class Seller {
 
-    @NonNull
-    @Column(name = "firstname")
+    @Column(name = "first_name")
     private String firstName;
 
-    @NonNull
-    @Column(name = "lastname")
+    @Column(name = "last_name")
     private String lastName;
 
-    @NonNull
-    @Column(name = "username")
-    private String username;
-
-    @NonNull
-    @Column(name = "nationalid")
     @Id
+    @NonNull
+    @Column(name = "national_id")
     private String nationalId;
 
     @NonNull
-    @Column(name = "phonenumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "phoneverified")
+    @Column(name = "phone_verified")
     private boolean phoneVerified;
 
-    @NonNull
     @Column(name = "email")
     private String email;
 
-    @Column(name = "emailverified")
+    @Column(name = "email_verified")
     private boolean emailVerified;
 
     @NonNull
-    @Column(name = "storeaddress")
-    private String storeAddress;
-
-    @NonNull
-    @Column(name = "encryptedpassword")
+    @Column(name = "encrypted_password")
     private String encryptedPassword;
 
-    @NonNull
-    @Column(name = "storeplate")
-    private Integer storePlate;
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private List<Product> products;
 
-    @NonNull
-    @Column(name = "storename")
-    private String storeName;
 
-//    private List<Product> sellerSoledProducts;
+    private Integer storeId;
+
+//    @Column(name = "is_active")
+//    private boolean isActive;
+//
+    @Column(name = "last_login_date")
+    private Date lastLoginDate;
+
+    public Seller(@NonNull String nationalId, @NonNull String phoneNumber, @NonNull String encryptedPassword) {
+        this.nationalId = nationalId;
+        this.phoneNumber = phoneNumber;
+        this.encryptedPassword = encryptedPassword;
+//        this.isActive = false;
+    }
+
+    public Seller() {
+
+    }
 
     @Override
     public String toString() {
-        return "Seller NationalId: " + this.getNationalId() + ", Username: " + this.getUsername()
+        return "Seller NationalId: " + this.getNationalId() + ", Username: "
                 + "\n, First Name: " + this.getFirstName() + ", Last Name: " + this.getLastName()
                 + "\n, Email: " + this.getEmail() + ", Phone Number: " + this.getPhoneNumber()
                 + "\n, Email Verified: " + this.isEmailVerified() + ", Phone Verified: " + this.isPhoneVerified()
-                + "\n, Address: " + this.getStoreAddress() + ", Store Plate: " + storePlate
                 + "\n, Encrypted Password: " + this.getEncryptedPassword();
     }
 }

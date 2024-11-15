@@ -2,11 +2,19 @@ package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.exceptions.OutputCode;
 import NesveSib.Installment.model.addingProductToStore.PhoneToBeAddedToStore;
+import NesveSib.Installment.model.addingProductToStore.SideProductToBeAddedToStore;
+import NesveSib.Installment.model.productModels.PhoneStock;
+import NesveSib.Installment.model.productModels.SideProductStock;
+import NesveSib.Installment.model.users.Seller;
+import NesveSib.Installment.service.SellerAccountService;
 import NesveSib.Installment.service.SellerDashboardService;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/seller-dashboard")
@@ -15,34 +23,86 @@ public class SellerDashboardController {
 
     private final Logger logger = ProjectInternalTools.getLogger(SellerDashboardController.class.getName());
     private final SellerDashboardService sellerDashboardService;
+    private final SellerAccountService sellerAccountService;
 
-    public SellerDashboardController(SellerDashboardService sellerDashboardService) {
+    public SellerDashboardController(SellerDashboardService sellerDashboardService, SellerAccountService sellerAccountService) {
         this.sellerDashboardService = sellerDashboardService;
+        this.sellerAccountService = sellerAccountService;
     }
 
 
     @PostMapping("/add_new_phone_to_storage")
-    private ResponseEntity<String> addNewPhoneToStorage(@RequestBody PhoneToBeAddedToStore newPhone) {
-        if (sellerDashboardService.addingNewPhoneToStoreStorage(newPhone)) {
+    private ResponseEntity<String> addNewPhoneToStorage(@CookieValue(name = "token") String token, @RequestBody PhoneToBeAddedToStore newPhone) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (sellerDashboardService.addingNewPhoneToStoreStorage(newPhone, seller)) {
             logger.info("addNewPhoneToStorage phone added to seller storage successfully");
             return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
-        }
-        else {
+        } else {
             logger.info("addNewPhoneToStorage oops error!");
             return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
         }
     }
 
     @GetMapping("/get_all_phone_stock")
-    private ResponseEntity<String> getAllPhoneStock() {
-        //TODO: getting the data from database
-        return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+    private ResponseEntity<List<PhoneStock>> getAllPhoneStock(@CookieValue(name = "token") String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<PhoneStock> phoneStocks = sellerDashboardService.getPhoneStockBySellerCode(seller);
+        if (phoneStocks != null && !phoneStocks.isEmpty()) {
+            logger.info("getAllPhoneStock phones received from database successfully");
+            return ResponseEntity.ok(phoneStocks);
+        } else {
+            logger.info("getAllPhoneStock oops error!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/add_new_side_product_to_storage")
+    private ResponseEntity<String> addNewSideProductToStorage(@CookieValue(name = "token") String token, @RequestBody SideProductToBeAddedToStore newProduct) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (sellerDashboardService.addingNewSideProductToStoreStorage(newProduct, seller)) {
+            logger.info("addNewSideProductToStorage phone added to seller storage successfully");
+            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+        } else {
+            logger.info("addNewSideProductToStorage oops error!");
+            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+        }
     }
 
     @GetMapping("/get_all_side_products_stock")
-    private ResponseEntity<String> getAllSideProductsStock() {
-        //TODO: getting the data from database
-        return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+    private ResponseEntity<List<SideProductStock>> getAllSideProductsStock(@CookieValue(name = "token") String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<SideProductStock> phoneStocks = sellerDashboardService.getSideProductStockBySellerCode(seller);
+        if (phoneStocks != null && !phoneStocks.isEmpty()) {
+            logger.info("getAllSideProductsStock side products received from database successfully");
+            return ResponseEntity.ok(phoneStocks);
+        } else {
+            logger.info("getAllSideProductsStock oops error!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping("/get_todays_all_installments")

@@ -1,23 +1,19 @@
 package NesveSib.Installment.model.productModels;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import NesveSib.Installment.model.users.Seller;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "general_product_tbl")
 public class Product {
 
     @Id
-//    @GeneratedValue
-    //TODO: implementation of generating unique keys for each product in database
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_code")
     private Integer productCode;
 
@@ -44,6 +40,13 @@ public class Product {
     @Column(name = "product_color")
     private String productColor;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_national_id")
+    private Seller seller;
+
+    public Product() {
+        System.out.println("error");
+    }
 
     @Override
     public String toString() {

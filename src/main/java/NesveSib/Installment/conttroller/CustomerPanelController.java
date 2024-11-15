@@ -1,12 +1,11 @@
 package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.exceptions.OutputCode;
-import NesveSib.Installment.model.users.Customer;
-import NesveSib.Installment.requestInputs.NewCustomerRequestInput;
-import NesveSib.Installment.requestInputs.NewSellerRequestInput;
+import NesveSib.Installment.requestInputs.NewUserRequestInput;
 import NesveSib.Installment.service.CustomerAccountService;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,17 +23,23 @@ public class CustomerPanelController {
 
     @CrossOrigin(origins = "http://localhost:5173") // Adjust the origin as needed
     @PostMapping("/signing-new-customer")
-    public ResponseEntity<String> signingNewCustomer(@RequestBody NewCustomerRequestInput customer) {
+    public ResponseEntity<String> signingNewCustomer(@RequestBody NewUserRequestInput customer) {
         logger.info("signingCustomer: going to sign in new customer");
 //        System.out.println(customer.toString());
-        if (!customerAccountService.checkIfCustomerExisted(customer.national_number())) {
-            customerAccountService.createRawCustomerAccount(customer);
-            logger.info("signingCustomer: customer created successfully");
-            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+        if (!customerAccountService.checkIfCustomerExisted(customer.national_number(),1)) {
+            if (!customerAccountService.checkIfCustomerExisted(ProjectInternalTools.trimPhoneNumber(customer.phone_number()),2)) {
+                customerAccountService.createRawCustomerAccount(customer);
+                logger.info("signingCustomer: customer created successfully");
+                return ResponseEntity.status(HttpStatus.CREATED).body(OutputCode.SUCCESS_2001.getCodeMessage());
+            }
+            else {
+                logger.info("signingCustomer: phone number already existed");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(OutputCode.ERROR_4004.getCodeMessage());
+            }
         }
         else {
             logger.info("signingCustomer: customer with national id {} exists", customer.national_number());
-            return ResponseEntity.ok(OutputCode.ERROR_5001.getCodeMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(OutputCode.ERROR_5001.getCodeMessage());
         }
     }
 
@@ -49,7 +54,7 @@ public class CustomerPanelController {
     @GetMapping("/login-with-nationalId")
     public ResponseEntity<String> loginCustomerWithNationalId(@RequestParam String nationalId, @RequestParam String password) {
         logger.info("loginCustomerWithNationalId: going to log in as a valid customer with national id {}", nationalId);
-        if(customerAccountService.checkIfCustomerExisted(nationalId)) {
+        if(customerAccountService.checkIfCustomerExisted(nationalId,1)) {
             if (customerAccountService.checkPasswordValidation(nationalId,password)) {
                 logger.info("loginCustomerWithNationalId: customer logged in successfully");
                 return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());

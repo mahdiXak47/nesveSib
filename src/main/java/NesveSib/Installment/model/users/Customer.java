@@ -1,18 +1,19 @@
 package NesveSib.Installment.model.users;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 
 @Getter
 @Setter
 @Entity
-@Table(name = "customer_tbl")
+@Table(name = "customer_tbl", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "national_id"),
+        @UniqueConstraint(columnNames = "phone_number")
+})
 public class Customer {
     @NonNull
     @Column(name = "national_id")
@@ -60,10 +61,17 @@ public class Customer {
     @Column(name = "third_relative_phone_number")
     private String thirdRelativePhoneNumber;
 
+    @Column(name = "is_active")
+    private boolean isActive = false;
+
+    @Column(name = "last_login_date")
+    private Date lastLoginDate;
+
     public Customer(@NonNull String nationalId, @NonNull String phoneNumber, @NonNull String password) {
         this.nationalId = nationalId;
         this.phoneNumber = phoneNumber;
         this.encryptedPassword = password;
+        this.isActive = false;
     }
 
     public Customer() {
