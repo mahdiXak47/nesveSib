@@ -27,19 +27,41 @@ public class SellerPanelController {
     }
 
     @PostMapping("/new-seller")
-    @CrossOrigin(origins = "http://localhost:5173") // Adjust the origin as needed
+    @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<String> createNewSellerAccount(@RequestBody NewUserRequestInput seller) {
         logger.info("createNewSellerAccount: going to sign in new seller");
         if (!sellerAccountService.checkIfSellerExisted(seller.national_number(), 1)) {
             if (!sellerAccountService.checkIfSellerExisted(ProjectInternalTools.trimPhoneNumber(seller.phone_number()), 2)) {
                 sellerAccountService.createRawSellerAccount(seller);
                 logger.info("createNewSellerAccount: seller created successfully");
+                return ResponseEntity.status(HttpStatus.CREATED).body(SUCCESS_2001.getCodeMessage());
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(SUCCESS_2001.getCodeMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ERROR_5007.getCodeMessage());
         } else {
             logger.info("createNewSellerAccount: seller with national id {} exists", seller.national_number());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ERROR_5001.getCodeMessage());
         }
+    }
+
+    @PostMapping("/login-after-sign-in")
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
+    public ResponseEntity<String> loginAfterSignIn(@RequestBody String nationalId) {
+        String token = sellerAccountService.login(nationalId);
+        if (!token.split(";")[0].equals("error")) {
+            ResponseCookie springCookie = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("None")
+                    .maxAge(3600)
+                    .build();
+            sellerAccountService.saveToken(nationalId, token);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.SET_COOKIE, springCookie.toString());
+            return ResponseEntity.ok().headers(headers)
+                    .build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error while login");
     }
 
     @PostMapping("/login-with-nationalId")
@@ -64,8 +86,6 @@ public class SellerPanelController {
                     return ResponseEntity.ok().headers(headers)
                             .build();
                 }
-//                Seller seller = sellerAccountService.getSellerWithNationalId(nationalId);
-//                return ResponseEntity.ok(SUCCESS_2001.getCodeMessage() + "\n" + seller.toString());
             }
             logger.info("loginAsValidSellerWithNationalId: seller password validation failed, password is incorrect");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ERROR_5003.getCodeMessage());
@@ -75,6 +95,12 @@ public class SellerPanelController {
 
     }
 
+
+    @GetMapping("/check-seller-info")
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
+    public boolean checkSellerAccountInfo(@RequestParam String nationalId) {
+        return sellerAccountService.checkSellerAccountInfo(nationalId);
+    }
 //    @GetMapping("/login-with-email")
 //    public ResponseEntity<String> loginAsValidSellerWithEmail(@RequestParam String email, @RequestParam String password) {
 //        if (sellerAccountService.checkIfSellerExistedWithThisEmail(email)) {

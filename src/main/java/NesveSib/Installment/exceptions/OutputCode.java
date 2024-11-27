@@ -6,6 +6,7 @@ public enum OutputCode {
     ERROR_5004("a seller with this username does not exist!"),
     ERROR_5005("a seller with this email does not exist!"),
     ERROR_5006("a seller with this phone number does not exist!"),
+    ERROR_5007("a seller with this phone number exist!"),
     ERROR_5003("your password is incorrect!"),
     ERROR_4001("Seller do not have panel in nesve sib system!"),
     ERROR_4002("Customer do not have panel in nesve sib system!"),

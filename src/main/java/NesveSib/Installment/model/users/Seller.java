@@ -48,7 +48,7 @@ public class Seller {
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<Product> products;
 
-
+    @Column(name = "store_code")
     private Integer storeId;
 
 //    @Column(name = "is_active")
@@ -61,6 +61,7 @@ public class Seller {
         this.nationalId = nationalId;
         this.phoneNumber = phoneNumber;
         this.encryptedPassword = encryptedPassword;
+        this.storeId = 0;
 //        this.isActive = false;
     }
 

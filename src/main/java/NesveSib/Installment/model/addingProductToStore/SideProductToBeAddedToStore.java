@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 public class SideProductToBeAddedToStore {
 
-    private final String sideProductType;
+    private final String productType;
 
-    private final String sideProductName;
+    private final String productName;
 
     private final Integer numberOfProductAvailable;
 
-    private final Long productPurchaseBySellerCost;
+    private final String productPurchaseBySellerCost;
 }

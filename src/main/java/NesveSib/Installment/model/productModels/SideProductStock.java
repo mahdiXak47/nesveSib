@@ -28,9 +28,9 @@ public class SideProductStock {
     private Integer numberOfAvailable;
 
     @Column(name = "cost_for_seller")
-    private Long costForSeller;
+    private String costForSeller;
 
-    @Column(name = "seller_code")
+    @Column(name = "product_seller_store_id")
     private Integer sellerCode;
 
     public SideProductStock() {

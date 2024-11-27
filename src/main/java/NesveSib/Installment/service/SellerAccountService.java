@@ -128,4 +128,12 @@ public class SellerAccountService {
         Optional<TokenCookie> tokenCookie = tokenCookieRepository.findByToken(token);
         return tokenCookie.map(cookie -> sellerAccountRepository.findByNationalId(cookie.getUserNationalId()).get()).orElse(null);
     }
+
+    public boolean checkSellerAccountInfo(String nationalId) {
+        Seller seller = sellerAccountRepository.findByNationalId(nationalId).get();
+        if (seller.getFirstName() == null || seller.getLastName() == null )
+//        || seller.getEmail() == null || !seller.isPhoneVerified() || !seller.isEmailVerified() || seller.getStoreId() == 0)
+            return false;
+        return true;
+    }
 }

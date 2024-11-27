@@ -5,7 +5,9 @@ import NesveSib.Installment.model.addingProductToStore.PhoneToBeAddedToStore;
 import NesveSib.Installment.model.addingProductToStore.SideProductToBeAddedToStore;
 import NesveSib.Installment.model.productModels.PhoneStock;
 import NesveSib.Installment.model.productModels.SideProductStock;
+import NesveSib.Installment.model.users.SellerStoreInvestor;
 import NesveSib.Installment.model.users.Seller;
+import NesveSib.Installment.model.users.ShopMan;
 import NesveSib.Installment.service.SellerAccountService;
 import NesveSib.Installment.service.SellerDashboardService;
 import NesveSib.Installment.utils.ProjectInternalTools;
@@ -29,7 +31,6 @@ public class SellerDashboardController {
         this.sellerDashboardService = sellerDashboardService;
         this.sellerAccountService = sellerAccountService;
     }
-
 
     @PostMapping("/add_new_phone_to_storage")
     private ResponseEntity<String> addNewPhoneToStorage(@CookieValue(name = "token") String token, @RequestBody PhoneToBeAddedToStore newPhone) {
@@ -101,6 +102,80 @@ public class SellerDashboardController {
             return ResponseEntity.ok(phoneStocks);
         } else {
             logger.info("getAllSideProductsStock oops error!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping("/adding-investor-to-store")
+    private ResponseEntity<String> addInvestorToStore(@CookieValue(name = "token") String token, @RequestBody AddInvestorForm newInvestor) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (sellerDashboardService.addingNewInvestorToStore(newInvestor, seller)) {
+            logger.info("addInvestorToStore investor added to seller storage successfully");
+            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+        } else {
+            logger.info("addInvestorToStore oops error!");
+            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+        }
+    }
+
+    @PostMapping("/adding-shopman-to-store")
+    private ResponseEntity<String> addShopManToStore(@CookieValue(name = "token") String token, @RequestBody AddShopManForm newShopMan) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        if (sellerDashboardService.addingNewShopManToStore(newShopMan, seller)) {
+            logger.info("addShopManToStore investor added to seller storage successfully");
+            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+        } else {
+            logger.info("addShopManToStore oops error!");
+            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+        }
+    }
+
+    @GetMapping("/get-store-shopman-info")
+    private ResponseEntity<List<ShopMan>> getStoreShopManInfo(@CookieValue(name = "token") String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<ShopMan> shopManList = sellerDashboardService.getStoreShopmansBySellerStoreCode(seller);
+        if (shopManList != null && !shopManList.isEmpty()) {
+            logger.info("getStoreShopManInfo side products received from database successfully");
+            return ResponseEntity.ok(shopManList);
+        } else {
+            logger.info("getStoreShopManInfo oops error!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/get-store-investors")
+    private ResponseEntity<List<SellerStoreInvestor>> getStoreInvestors(@CookieValue(name = "token")String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        List<SellerStoreInvestor> sellerInvestors = sellerDashboardService.getInvestorsBySellerStoreCode(seller);
+        if (sellerInvestors != null && !sellerInvestors.isEmpty()) {
+            logger.info("getStoreInvestors side products received from database successfully");
+            return ResponseEntity.ok(sellerInvestors);
+        } else {
+            logger.info("getStoreInvestors oops error!");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
