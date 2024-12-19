@@ -3,8 +3,10 @@ package NesveSib.Installment.service;
 
 import NesveSib.Installment.conttroller.AddInvestorForm;
 import NesveSib.Installment.conttroller.AddShopManForm;
+import NesveSib.Installment.model.addingProductToStore.Airpod;
 import NesveSib.Installment.model.addingProductToStore.PhoneToBeAddedToStore;
 import NesveSib.Installment.model.addingProductToStore.SideProductToBeAddedToStore;
+import NesveSib.Installment.model.addingProductToStore.Watch;
 import NesveSib.Installment.model.productModels.PhoneStock;
 import NesveSib.Installment.model.productModels.Product;
 import NesveSib.Installment.model.productModels.SideProductStock;
@@ -30,14 +32,18 @@ public class SellerDashboardService {
     private final SellerStoreRepository sellerStoreRepository;
     private final SellerStoreInvestorRepository sellerStoreInvestorRepository;
     private final SellerStoreShopmanRepository sellerStoreShopmanRepository;
+    private final AirpodStockRepository airpodStockRepository;
+    private final WatchStockRepo watchStockRepository;
 
-    public SellerDashboardService(ProductsRepository productsRepository, SellerAccountRepository sellerAccountRepository, PhoneStockRepository phoneStockRepository, SideProductStockRepository sideProductStockRepository, SellerStoreRepository sellerStoreRepository, SellerStoreInvestorRepository sellerStoreInvestorRepository, SellerStoreShopmanRepository sellerStoreShopmanRepository) {
+    public SellerDashboardService(ProductsRepository productsRepository, SellerAccountRepository sellerAccountRepository, PhoneStockRepository phoneStockRepository, SideProductStockRepository sideProductStockRepository, SellerStoreRepository sellerStoreRepository, SellerStoreInvestorRepository sellerStoreInvestorRepository, SellerStoreShopmanRepository sellerStoreShopmanRepository, AirpodStockRepository airpodStockRepository, WatchStockRepo watchStockRepository) {
         this.productsRepository = productsRepository;
         this.phoneStockRepository = phoneStockRepository;
         this.sideProductStockRepository = sideProductStockRepository;
         this.sellerStoreRepository = sellerStoreRepository;
         this.sellerStoreInvestorRepository = sellerStoreInvestorRepository;
         this.sellerStoreShopmanRepository = sellerStoreShopmanRepository;
+        this.airpodStockRepository = airpodStockRepository;
+        this.watchStockRepository = watchStockRepository;
     }
 
     public boolean addingNewPhoneToStoreStorage(PhoneToBeAddedToStore phoneToBeAdded, Seller ownerOfProduct) {
@@ -87,15 +93,35 @@ public class SellerDashboardService {
     }
 
     public boolean addingNewShopManToStore(AddShopManForm newShopMan, Seller seller) {
-        ShopMan shopMan = new ShopMan(-1, newShopMan.getShopManFirstName(), newShopMan.getShopManLastName(),
-                ProjectInternalTools.trimPhoneNumber(newShopMan.getShopManPhoneNumber()),
-                Long.valueOf(newShopMan.getShopManNationalId()), seller.getStoreId());
-        sellerStoreShopmanRepository.save(shopMan);
-        return false;
+        if (sellerStoreShopmanRepository.findShopMenByStoreId(seller.getStoreId()).size()<4) {
+            ShopMan shopMan = new ShopMan(-1, newShopMan.getShopManFirstName(), newShopMan.getShopManLastName(),
+                    ProjectInternalTools.trimPhoneNumber(newShopMan.getShopManPhoneNumber()),
+                    newShopMan.getShopManNationalId(), seller.getStoreId());
+            sellerStoreShopmanRepository.save(shopMan);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public List<ShopMan> getStoreShopmansBySellerStoreCode(Seller seller) {
-//        TODO: get the store shopman infos from database
-        return null;
+        return sellerStoreShopmanRepository.findShopMenByStoreId(seller.getStoreId());
+    }
+
+    public boolean addingNewAirpodToStoreStorage(Airpod newAirpod, Seller seller) {
+        newAirpod.setSellerStoreCode(seller.getStoreId());
+        airpodStockRepository.save(newAirpod);
+        return true;
+    }
+
+
+    public List<Airpod> getAirpodStockBySellerCode(Integer StoreId) {
+        return airpodStockRepository.findBySellerStoreCode(StoreId);
+    }
+
+    public boolean addingNewWatchToStore(Watch newWatch, Integer storeId) {
+        newWatch.setSellerStoreCode(storeId);
+        watchStockRepository.save(newWatch);
+        return true;
     }
 }

@@ -33,7 +33,7 @@ public class ShopMan {
 
     @NonNull
     @Column(name = "national_id")
-    private Long nationalId;
+    private String nationalId;
 
     @NonNull
     @Column(name = "store_id")
@@ -46,7 +46,7 @@ public class ShopMan {
     @Override
     public String toString() {
         return "ShopMan{" +
-                "id=" + id +
+                "id =" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
