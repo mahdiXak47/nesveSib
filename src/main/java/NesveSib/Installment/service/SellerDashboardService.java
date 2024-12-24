@@ -3,12 +3,10 @@ package NesveSib.Installment.service;
 
 import NesveSib.Installment.conttroller.AddInvestorForm;
 import NesveSib.Installment.conttroller.AddShopManForm;
-import NesveSib.Installment.model.addingProductToStore.Airpod;
-import NesveSib.Installment.model.addingProductToStore.PhoneToBeAddedToStore;
+import NesveSib.Installment.model.productModels.Airpod;
 import NesveSib.Installment.model.addingProductToStore.SideProductToBeAddedToStore;
-import NesveSib.Installment.model.addingProductToStore.Watch;
+import NesveSib.Installment.model.productModels.Watch;
 import NesveSib.Installment.model.productModels.PhoneStock;
-import NesveSib.Installment.model.productModels.Product;
 import NesveSib.Installment.model.productModels.SideProductStock;
 import NesveSib.Installment.model.users.SellerStoreInvestor;
 import NesveSib.Installment.model.users.Seller;
@@ -46,27 +44,15 @@ public class SellerDashboardService {
         this.watchStockRepository = watchStockRepository;
     }
 
-    public boolean addingNewPhoneToStoreStorage(PhoneToBeAddedToStore phoneToBeAdded, Seller ownerOfProduct) {
-        Product product = new Product(-1, "Iphone", "Phone",
-                phoneToBeAdded.getPhoneModel(), phoneToBeAdded.getPhoneFirstIMEI(), phoneToBeAdded.getPhoneSecondIMEI(),
-                phoneToBeAdded.getPhoneColor(), ownerOfProduct);
-        PhoneStock phoneStock = new PhoneStock(-1, phoneToBeAdded.getPhoneModel(), phoneToBeAdded.getPhoneType(),
-                phoneToBeAdded.getPhoneColor(), phoneToBeAdded.getPhonePartNumber(), phoneToBeAdded.getPhoneStorage(),
-                phoneToBeAdded.getPhoneFirstIMEI(), phoneToBeAdded.getPhoneSecondIMEI(), phoneToBeAdded.getPhonePurchasedCost(),
-                ownerOfProduct.getStoreId());
-        phoneStockRepository.save(phoneStock);
-        productsRepository.save(product);
-        return true;
-    }
 
     public List<PhoneStock> getPhoneStockBySellerCode(Seller seller) {
-        return phoneStockRepository.findBySellerCode(seller.getStoreId());
+        return phoneStockRepository.findBySellerStoreId(seller.getStoreId());
     }
 
     public boolean addingNewSideProductToStoreStorage(SideProductToBeAddedToStore newProduct, Seller seller) {
-        SideProductStock product = new SideProductStock(-1, newProduct.getProductType(), newProduct.getProductName(),
-                newProduct.getNumberOfProductAvailable(), newProduct.getProductPurchaseBySellerCost(), seller.getStoreId());
-        sideProductStockRepository.save(product);
+//        SideProductStock product = new SideProductStock(-1, newProduct.getProductType(), newProduct.getProductName(),
+//                newProduct.getNumberOfProductAvailable(), newProduct.getProductPurchaseBySellerCost(), seller.getStoreId());
+//        sideProductStockRepository.save(product);
         return true;
     }
 
@@ -122,6 +108,16 @@ public class SellerDashboardService {
     public boolean addingNewWatchToStore(Watch newWatch, Integer storeId) {
         newWatch.setSellerStoreCode(storeId);
         watchStockRepository.save(newWatch);
+        return true;
+    }
+
+    public List<Watch> getWatchStockBySellerCode(Integer storeId) {
+        return watchStockRepository.findBySellerStoreCode(storeId);
+    }
+
+    public boolean addingNewPhoneToStoreStorage(PhoneStock newPhone, Integer storeId) {
+        newPhone.setSellerStoreId(storeId);
+        phoneStockRepository.save(newPhone);
         return true;
     }
 }

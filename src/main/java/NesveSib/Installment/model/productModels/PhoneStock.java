@@ -43,7 +43,13 @@ public class PhoneStock {
     private String costForSeller;
 
     @Column(name = "seller_code")
-    private Integer sellerCode;
+    private Integer sellerStoreId;
+
+    @Column(name = "battery_health")
+    private String batteryHealth;
+
+    @Column(name = "is_sold")
+    private boolean isDeviceSoldOut;
 
     public PhoneStock() {
         System.out.println("system error in phone stock");

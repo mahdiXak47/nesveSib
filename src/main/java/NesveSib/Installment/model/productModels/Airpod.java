@@ -1,4 +1,4 @@
-package NesveSib.Installment.model.addingProductToStore;
+package NesveSib.Installment.model.productModels;
 
 
 import jakarta.persistence.*;
@@ -35,6 +35,9 @@ public class Airpod {
 
     @Column(name = "seller_store_code")
     private Integer sellerStoreCode;
+
+    @Column(name = "is_sold")
+    private boolean isAirpodSoldOut;
 
 
     public Airpod() {

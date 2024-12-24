@@ -44,6 +44,7 @@ public class Product {
     @JoinColumn(name = "owner_national_id")
     private Seller seller;
 
+
     public Product() {
         System.out.println("error");
     }

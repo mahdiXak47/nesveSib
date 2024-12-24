@@ -1,9 +1,12 @@
 package NesveSib.Installment.utils;
 
+import NesveSib.Installment.model.users.Seller;
 import NesveSib.Installment.security.PasswordEncryptor;
 import ch.qos.logback.classic.Logger;
 import lombok.extern.java.Log;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,4 +25,6 @@ public class ProjectInternalTools {
             return phoneNumber.substring(2);
         return phoneNumber;
     }
+
+
 }

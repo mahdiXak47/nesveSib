@@ -1,4 +1,4 @@
-package NesveSib.Installment.model.addingProductToStore;
+package NesveSib.Installment.model.productModels;
 
 
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ public class Watch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer airpodId;
+    private Integer watchId;
 
     @Column(name = "watch_model")
     private String watchModel;
@@ -32,6 +32,9 @@ public class Watch {
 
     @Column(name = "seller_store_code")
     private Integer sellerStoreCode;
+
+    @Column(name = "is_sold")
+    private boolean isWatchSoldOut;
 
     public Watch() {
         System.out.println("watch watch ! !");

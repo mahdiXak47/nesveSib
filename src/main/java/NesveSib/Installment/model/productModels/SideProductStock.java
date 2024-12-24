@@ -33,6 +33,9 @@ public class SideProductStock {
     @Column(name = "product_seller_store_id")
     private Integer sellerCode;
 
+    @Column(name = "is_sold")
+    private boolean isProductSoldOut;
+
     public SideProductStock() {
         System.out.println("system error in side product stock");
     }

@@ -1,6 +1,6 @@
 package NesveSib.Installment.respository;
 
-import NesveSib.Installment.model.addingProductToStore.Airpod;
+import NesveSib.Installment.model.productModels.Airpod;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

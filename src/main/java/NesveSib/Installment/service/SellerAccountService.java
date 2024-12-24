@@ -110,7 +110,7 @@ public class SellerAccountService {
     }
 
     @Transactional
-    public boolean saveToken(String nationalId, String token) {
+    public void saveToken(String nationalId, String token) {
         Optional<Seller> seller = sellerAccountRepository.findByNationalId(nationalId);
         if (seller.isPresent()) {
             String sellerNationalId = seller.get().getNationalId();
@@ -119,9 +119,7 @@ public class SellerAccountService {
             tokenCookie.setToken(token);
             tokenCookie.setUserNationalId(sellerNationalId);
             tokenCookieRepository.save(tokenCookie);
-            return true;
         }
-        return false;
     }
 
     public Seller findSellerByToken(String token) {

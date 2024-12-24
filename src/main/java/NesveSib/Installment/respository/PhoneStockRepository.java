@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface PhoneStockRepository extends JpaRepository<PhoneStock, Long> {
 
-    List<PhoneStock> findBySellerCode(Integer sellerCode);
+    List<PhoneStock> findBySellerStoreId(Integer sellerCode);
 
 }

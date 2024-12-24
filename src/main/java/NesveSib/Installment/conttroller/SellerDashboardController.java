@@ -1,10 +1,9 @@
 package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.exceptions.OutputCode;
-import NesveSib.Installment.model.addingProductToStore.Airpod;
-import NesveSib.Installment.model.addingProductToStore.PhoneToBeAddedToStore;
+import NesveSib.Installment.model.productModels.Airpod;
 import NesveSib.Installment.model.addingProductToStore.SideProductToBeAddedToStore;
-import NesveSib.Installment.model.addingProductToStore.Watch;
+import NesveSib.Installment.model.productModels.Watch;
 import NesveSib.Installment.model.productModels.PhoneStock;
 import NesveSib.Installment.model.productModels.SideProductStock;
 import NesveSib.Installment.model.users.SellerStoreInvestor;
@@ -34,8 +33,7 @@ public class SellerDashboardController {
         this.sellerAccountService = sellerAccountService;
     }
 
-    @PostMapping("/add_new_phone_to_storage")
-    private ResponseEntity<String> addNewPhoneToStorage(@CookieValue(name = "token") String token, @RequestBody PhoneToBeAddedToStore newPhone) {
+    private ResponseEntity<String> tokenValidationCheck(String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
         }
@@ -43,49 +41,72 @@ public class SellerDashboardController {
         if (seller == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
-        if (sellerDashboardService.addingNewPhoneToStoreStorage(newPhone, seller)) {
-            logger.info("addNewPhoneToStorage phone added to seller storage successfully");
-            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
-        } else {
-            logger.info("addNewPhoneToStorage oops error!");
-            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("token is valid");
+    }
+
+    @PostMapping("/add_new_phone_to_storage")
+    private ResponseEntity<String> addNewPhoneToStorage(@CookieValue(name = "token") String token, @RequestBody PhoneStock newPhone) {
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            if (sellerDashboardService.addingNewPhoneToStoreStorage(newPhone, seller.getStoreId())) {
+                logger.info("addNewPhoneToStorage phone added to seller storage successfully");
+                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            } else {
+                logger.info("addNewPhoneToStorage oops error!");
+                return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+            }
+        } else
+            return tokenValidation;
     }
 
     @PostMapping("/add_new_watch_to_storage")
-    private ResponseEntity<String> addWatchToStorage(@CookieValue(name = "token") String token,@RequestBody Watch newWatch) {
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
-        }
-        Seller seller = sellerAccountService.findSellerByToken(token);
-        if (seller == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (sellerDashboardService.addingNewWatchToStore(newWatch, seller.getStoreId())) {
-            logger.info("addWatchToStorage watch added to seller storage successfully");
-            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
-        } else {
-            logger.info("addWatchToStorage oops error!");
-            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
-        }
+    private ResponseEntity<String> addWatchToStorage(@CookieValue(name = "token") String token, @RequestBody Watch newWatch) {
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            if (sellerDashboardService.addingNewWatchToStore(newWatch, seller.getStoreId())) {
+                logger.info("addWatchToStorage watch added to seller storage successfully");
+                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            } else {
+                logger.info("addWatchToStorage oops error!");
+                return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+            }
+        } else
+            return tokenValidation;
     }
 
     @PostMapping("/add_new_airpod_to_storage")
-    private ResponseEntity<String> addNewAirpodToStorage(@CookieValue(name ="token") String token,@RequestBody Airpod newAirpod) {
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
-        }
-        Seller seller = sellerAccountService.findSellerByToken(token);
-        if (seller == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (sellerDashboardService.addingNewAirpodToStoreStorage(newAirpod, seller)) {
-            logger.info("addNewAirpodToStorage phone added to seller storage successfully");
-            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
-        } else {
-            logger.info("addNewAirpodToStorage oops error!");
-            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
-        }
+    private ResponseEntity<String> addNewAirpodToStorage(@CookieValue(name = "token") String token, @RequestBody Airpod newAirpod) {
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            if (sellerDashboardService.addingNewAirpodToStoreStorage(newAirpod, seller)) {
+                logger.info("addNewAirpodToStorage phone added to seller storage successfully");
+                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            } else {
+                logger.info("addNewAirpodToStorage oops error!");
+                return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+            }
+        } else
+            return tokenValidation;
+    }
+
+    @GetMapping("/get_all_watch_stock")
+    private ResponseEntity<List<Watch>> getAllWatchStock(@CookieValue(name = "token") String token) {
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            List<Watch> watches = sellerDashboardService.getWatchStockBySellerCode(seller.getStoreId());
+            if (watches != null && !watches.isEmpty()) {
+                logger.info("getAllWatchStock airpods received from database successfully");
+                return ResponseEntity.ok(watches);
+            } else {
+                logger.info("getAllWatchStock oops error!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } else
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     @GetMapping("/get_all_airpod_stock")
@@ -128,75 +149,67 @@ public class SellerDashboardController {
 
     @PostMapping("/add_new_side_product_to_storage")
     private ResponseEntity<String> addNewSideProductToStorage(@CookieValue(name = "token") String token, @RequestBody SideProductToBeAddedToStore newProduct) {
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
-        }
-        Seller seller = sellerAccountService.findSellerByToken(token);
-        if (seller == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (sellerDashboardService.addingNewSideProductToStoreStorage(newProduct, seller)) {
-            logger.info("addNewSideProductToStorage phone added to seller storage successfully");
-            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
-        } else {
-            logger.info("addNewSideProductToStorage oops error!");
-            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
-        }
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            if (sellerDashboardService.addingNewSideProductToStoreStorage(newProduct, seller)) {
+                logger.info("addNewSideProductToStorage phone added to seller storage successfully");
+                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            } else {
+                logger.info("addNewSideProductToStorage oops error!");
+                return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+            }
+        } else
+            return tokenValidation;
     }
 
     @GetMapping("/get_all_side_products_stock")
     private ResponseEntity<List<SideProductStock>> getAllSideProductsStock(@CookieValue(name = "token") String token) {
-        if (token == null || token.isEmpty()) {
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            List<SideProductStock> phoneStocks = sellerDashboardService.getSideProductStockBySellerCode(seller);
+            if (phoneStocks != null && !phoneStocks.isEmpty()) {
+                logger.info("getAllSideProductsStock side products received from database successfully");
+                return ResponseEntity.ok(phoneStocks);
+            } else {
+                logger.info("getAllSideProductsStock oops error!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } else
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        Seller seller = sellerAccountService.findSellerByToken(token);
-        if (seller == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        List<SideProductStock> phoneStocks = sellerDashboardService.getSideProductStockBySellerCode(seller);
-        if (phoneStocks != null && !phoneStocks.isEmpty()) {
-            logger.info("getAllSideProductsStock side products received from database successfully");
-            return ResponseEntity.ok(phoneStocks);
-        } else {
-            logger.info("getAllSideProductsStock oops error!");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
     }
 
     @PostMapping("/adding-investor-to-store")
     private ResponseEntity<String> addInvestorToStore(@CookieValue(name = "token") String token, @RequestBody AddInvestorForm newInvestor) {
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
-        }
-        Seller seller = sellerAccountService.findSellerByToken(token);
-        if (seller == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (sellerDashboardService.addingNewInvestorToStore(newInvestor, seller)) {
-            logger.info("addInvestorToStore investor added to seller storage successfully");
-            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
-        } else {
-            logger.info("addInvestorToStore oops error!");
-            return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
-        }
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            if (sellerDashboardService.addingNewInvestorToStore(newInvestor, seller)) {
+                logger.info("addInvestorToStore investor added to seller storage successfully");
+                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            } else {
+                logger.info("addInvestorToStore oops error!");
+                return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+            }
+        } else
+            return tokenValidation;
     }
 
     @PostMapping("/adding-shopman-to-store")
-    private ResponseEntity<String> addShopManToStore(@CookieValue(name = "token") String token, @RequestBody AddShopManForm newShopMan)     {
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
-        }
-        Seller seller = sellerAccountService.findSellerByToken(token);
-        if (seller == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        if (sellerDashboardService.addingNewShopManToStore(newShopMan, seller)) {
-            logger.info("addShopManToStore shop man added to seller storage successfully");
-            return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
-        } else {
-            logger.info("addShopManToStore user shop men list is full");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Maximum number of shop men reached. You cannot add more.");
-        }
+    private ResponseEntity<String> addShopManToStore(@CookieValue(name = "token") String token, @RequestBody AddShopManForm newShopMan) {
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            if (sellerDashboardService.addingNewShopManToStore(newShopMan, seller)) {
+                logger.info("addShopManToStore shop man added to seller storage successfully");
+                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            } else {
+                logger.info("addShopManToStore user shop men list is full");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Maximum number of shop men reached. You cannot add more.");
+            }
+        } else
+            return tokenValidation;
     }
 
     @GetMapping("/get-store-shopman-info")
@@ -219,7 +232,7 @@ public class SellerDashboardController {
     }
 
     @GetMapping("/get-store-investors")
-    private ResponseEntity<List<SellerStoreInvestor>> getStoreInvestors(@CookieValue(name = "token")String token) {
+    private ResponseEntity<List<SellerStoreInvestor>> getStoreInvestors(@CookieValue(name = "token") String token) {
         if (token == null || token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
