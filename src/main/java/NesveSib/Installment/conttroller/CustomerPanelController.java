@@ -82,6 +82,27 @@ public class CustomerPanelController {
             return tokenValidation;
     }
 
+    @PostMapping("/login-after-sign-in")
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
+    public ResponseEntity<String> loginAfterSignIn(@RequestBody String nationalId) {
+        nationalId = nationalId.substring(1, nationalId.length()-1);
+        String token = customerAccountService.login(nationalId);
+        if (!token.split(";")[0].equals("error")) {
+            ResponseCookie springCookie = ResponseCookie.from("token", token)
+                    .httpOnly(true)
+                    .secure(true)
+                    .path("/")
+                    .sameSite("None")
+                    .maxAge(3600)
+                    .build();
+            customerAccountService.saveToken(nationalId, token);
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.SET_COOKIE, springCookie.toString());
+            return ResponseEntity.ok().headers(headers)
+                    .build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("error while login");
+    }
 
     @PostMapping("/login-with-nationalId")
     @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
@@ -114,6 +135,17 @@ public class CustomerPanelController {
             logger.info("loginCustomerWithNationalId: customer with national id {} does not exist", input.getNationalId());
             return ResponseEntity.ok(OutputCode.ERROR_5002.getCodeMessage());
         }
+    }
+
+    @GetMapping("/fetch-info-from-token")
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
+    public ResponseEntity<Customer> fetchCustomerFromToken(@CookieValue(name = "token") String token) {
+        Customer customer = customerAccountService.findCustomerByToken(token);
+        logger.info("fetchCustomerFromToken: going to fetch customer from token");
+        if (customer!=null) {
+            return ResponseEntity.ok(customer);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @GetMapping("/login")

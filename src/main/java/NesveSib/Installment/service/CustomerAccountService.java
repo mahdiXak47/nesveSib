@@ -56,10 +56,10 @@ public class CustomerAccountService {
     }
 
     public String login(String nationalId) {
-        Customer custom = customerAccountRepository.findByNationalId(nationalId).get();
-        custom.setLastLoginDate(new Date(System.currentTimeMillis()));
+        Customer customer = customerAccountRepository.findByNationalId(nationalId).get();
+        customer.setLastLoginDate(new Date(System.currentTimeMillis()));
         String token = TokenService.generateToken();
-        customerAccountRepository.save(custom);
+        customerAccountRepository.save(customer);
         return token;
     }
 
