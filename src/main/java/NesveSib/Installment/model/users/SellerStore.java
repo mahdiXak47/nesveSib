@@ -1,10 +1,21 @@
 package NesveSib.Installment.model.users;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "seller_store_tbl")
+@Table(name = "seller_store_tbl", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "seller_national_id")}
+)
+@AllArgsConstructor
+@NoArgsConstructor
 public class SellerStore {
 
     @Id
@@ -23,6 +34,10 @@ public class SellerStore {
 
     @Column(name = "workplace", nullable = false)
     private String workplace;
+
+    @Column(name = "seller_national_id")
+    private String sellerNationalId;
+
 
 //    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<SellerStoreInvestor> investors;

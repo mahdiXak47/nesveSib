@@ -19,6 +19,8 @@ public interface SellerAccountRepository extends JpaRepository<Seller, String> {
 
     Optional<Seller> findByNationalId(String nationalId);
 
+    Optional<Seller> findByEmail(String email);
+
     Optional<Seller> findByPhoneNumber(String phoneNumber);
 
 }

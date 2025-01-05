@@ -3,8 +3,11 @@ package NesveSib.Installment.service;
 
 import NesveSib.Installment.model.TokenCookie;
 import NesveSib.Installment.model.users.Seller;
+import NesveSib.Installment.model.users.SellerStore;
+import NesveSib.Installment.requestInputs.CompleteSellerAccountForm;
 import NesveSib.Installment.requestInputs.NewUserRequestInput;
 import NesveSib.Installment.respository.SellerAccountRepository;
+import NesveSib.Installment.respository.SellerStoreRepository;
 import NesveSib.Installment.respository.TokenCookieRepository;
 import NesveSib.Installment.security.PasswordEncryptor;
 import NesveSib.Installment.utils.ProjectInternalTools;
@@ -21,13 +24,14 @@ public class SellerAccountService {
     private final Logger logger = ProjectInternalTools.getLogger(SellerAccountService.class.getName());
 
     private final SellerAccountRepository sellerAccountRepository;
-
+    private final SellerStoreRepository sellerStoreRepository;
     private final TokenCookieRepository tokenCookieRepository;
 
     private final PasswordEncryptor passwordEncryptor;
 
-    public SellerAccountService(SellerAccountRepository sellerAccountRepository, PasswordEncryptor passwordEncryptor, TokenCookieRepository tokenCookieRepository) {
+    public SellerAccountService(SellerAccountRepository sellerAccountRepository, SellerStoreRepository sellerStoreRepository, PasswordEncryptor passwordEncryptor, TokenCookieRepository tokenCookieRepository) {
         this.sellerAccountRepository = sellerAccountRepository;
+        this.sellerStoreRepository = sellerStoreRepository;
         this.tokenCookieRepository = tokenCookieRepository;
         this.passwordEncryptor = passwordEncryptor;
     }
@@ -39,7 +43,6 @@ public class SellerAccountService {
         sellerAccountRepository.save(seller);
         logger.info("createSellerAccount: seller added to database successfully!");
     }
-
 
     public boolean checkIfSellerExisted(String toBeChecked, int type) {
         return switch (type) {
@@ -129,9 +132,28 @@ public class SellerAccountService {
 
     public boolean checkSellerAccountInfo(String nationalId) {
         Seller seller = sellerAccountRepository.findByNationalId(nationalId).get();
-        if (seller.getFirstName() == null || seller.getLastName() == null )
+        if (seller.getFirstName() == null || seller.getLastName() == null)
 //        || seller.getEmail() == null || !seller.isPhoneVerified() || !seller.isEmailVerified() || seller.getStoreId() == 0)
             return false;
         return true;
+    }
+
+    public boolean checkIfEmailIsDuplicated(String email) {
+        return sellerAccountRepository.findByEmail(email).isEmpty(); //returns false if email is existed in another account
+    }
+
+    public boolean completeAndActiveAccount(Seller seller, CompleteSellerAccountForm input) {
+        SellerStore sellerStore = new SellerStore(-1, input.getStoreName(), input.getStoreAddress(), Integer.valueOf(input.getStorePlateNumber()), input.getStorePlace(), seller.getNationalId());
+        seller.setFirstName(input.getFirstName());
+        seller.setLastName(input.getLastName());
+        seller.setEmail(input.getEmail());
+        seller.setActive(true);
+        sellerAccountRepository.save(seller);
+        sellerStoreRepository.save(sellerStore);
+        return true;
+    }
+
+    public SellerStore findSellerStoreBySellerNationalId(String nationalId) {
+        return sellerStoreRepository.findBySellerNationalId(nationalId).orElse(null);
     }
 }

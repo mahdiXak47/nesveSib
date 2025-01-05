@@ -4,7 +4,7 @@ import lombok.Getter;
 
 
 @Getter
-public class CompleteAccountForm {
+public class CompleteCustomerAccountForm {
 
     private final String firstName;
     private final String lastName;
@@ -18,7 +18,7 @@ public class CompleteAccountForm {
     private final String relativeNumber3;
     private boolean isActive;
 
-    public CompleteAccountForm(String firstName, String lastName, String email, String address, String phoneNumber, String dateOfBirth, String fathersName, String relativeNumber1, String relativeNumber2, String relativeNumber3) {
+    public CompleteCustomerAccountForm(String firstName, String lastName, String email, String address, String phoneNumber, String dateOfBirth, String fathersName, String relativeNumber1, String relativeNumber2, String relativeNumber3) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

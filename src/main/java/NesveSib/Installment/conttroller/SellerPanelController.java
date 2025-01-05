@@ -1,7 +1,12 @@
 package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.exceptions.OutputCode;
+import NesveSib.Installment.model.users.Customer;
 import NesveSib.Installment.model.users.Seller;
+import NesveSib.Installment.model.users.SellerPackage;
+import NesveSib.Installment.model.users.SellerStore;
+import NesveSib.Installment.requestInputs.CompleteCustomerAccountForm;
+import NesveSib.Installment.requestInputs.CompleteSellerAccountForm;
 import NesveSib.Installment.requestInputs.LoginRequestCheckInput;
 import NesveSib.Installment.requestInputs.NewUserRequestInput;
 import NesveSib.Installment.service.SellerAccountService;
@@ -26,6 +31,18 @@ public class SellerPanelController {
         this.sellerAccountService = sellerAccountService;
     }
 
+    //todo: this function is copy and should refactor!
+    private ResponseEntity<String> tokenValidationCheck(String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token is missing");
+        }
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        if (seller == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("token is valid");
+    }
+
     @PostMapping("/new-seller")
     @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<String> createNewSellerAccount(@RequestBody NewUserRequestInput seller) {
@@ -46,6 +63,7 @@ public class SellerPanelController {
     @PostMapping("/login-after-sign-in")
     @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
     public ResponseEntity<String> loginAfterSignIn(@RequestBody String nationalId) {
+        nationalId = nationalId.substring(1, nationalId.length()-1);
         String token = sellerAccountService.login(nationalId);
         if (!token.split(";")[0].equals("error")) {
             ResponseCookie springCookie = ResponseCookie.from("token", token)
@@ -101,6 +119,46 @@ public class SellerPanelController {
     public boolean checkSellerAccountInfo(@RequestParam String nationalId) {
         return sellerAccountService.checkSellerAccountInfo(nationalId);
     }
+
+
+    @PostMapping("/complete-account-to-active")
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
+    private ResponseEntity<String> completeAccountToActive(@CookieValue(name = "token") String token, @RequestBody CompleteSellerAccountForm input) {
+        logger.info("completeAccountToActive: going to active seller account");
+        ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
+        if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
+            Seller seller = sellerAccountService.findSellerByToken(token);
+            if (sellerAccountService.checkIfEmailIsDuplicated(input.getEmail())) {
+                if (sellerAccountService.completeAndActiveAccount(seller, input)) {
+                    logger.info("completeAccountToActive: customer activated successfully");
+                    return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+                } else {
+                    logger.info("completeAccountToActive oops error!");
+                    return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+                }
+            } else {
+                logger.info("completeAccountToActive: another user is active with this email address");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(ERROR_4005.getCodeMessage());
+            }
+        } else
+            return tokenValidation;
+    }
+
+    @GetMapping("/fetch-info-from-token")
+    @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*")
+    public ResponseEntity<SellerPackage> fetchSellerFromToken(@CookieValue(name = "token") String token) {
+        Seller seller = sellerAccountService.findSellerByToken(token);
+        SellerStore sellerStore = sellerAccountService.findSellerStoreBySellerNationalId(seller.getNationalId());
+        logger.info("fetchSellerFromToken: going to fetch customer from token");
+        if (seller!=null) {
+            logger.info("fetchSellerFromToken: data fetched successfully!");
+            return ResponseEntity.ok(new SellerPackage(seller,sellerStore));
+        }
+        logger.info("fetchSellerFromToken: seller or sellerStore not Found!");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+
 //    @GetMapping("/login-with-email")
 //    public ResponseEntity<String> loginAsValidSellerWithEmail(@RequestParam String email, @RequestParam String password) {
 //        if (sellerAccountService.checkIfSellerExistedWithThisEmail(email)) {

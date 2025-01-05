@@ -2,7 +2,7 @@ package NesveSib.Installment.service;
 
 import NesveSib.Installment.model.TokenCookie;
 import NesveSib.Installment.model.users.Customer;
-import NesveSib.Installment.requestInputs.CompleteAccountForm;
+import NesveSib.Installment.requestInputs.CompleteCustomerAccountForm;
 import NesveSib.Installment.requestInputs.NewUserRequestInput;
 import NesveSib.Installment.respository.CustomerAccountRepository;
 import NesveSib.Installment.respository.TokenCookieRepository;
@@ -81,7 +81,7 @@ public class CustomerAccountService {
         return tokenCookie.map(cookie -> customerAccountRepository.findByNationalId(cookie.getUserNationalId()).get()).orElse(null);
     }
 
-    public boolean completeAndActiveAccount(Customer customer, CompleteAccountForm input) {
+    public boolean completeAndActiveAccount(Customer customer, CompleteCustomerAccountForm input) {
         customer.setFirstName(input.getFirstName());
         customer.setLastName(input.getLastName());
         customer.setFathersName(input.getFathersName());
@@ -119,5 +119,9 @@ public class CustomerAccountService {
         System.out.println("local Date: " + gregorianDate);
         System.out.println("date: " + date);
         return date;
+    }
+
+    public boolean checkIfEmailIsDuplicated(String email) {
+        return customerAccountRepository.findByEmail(email).isEmpty(); //returns false if email is existed in another account
     }
 }

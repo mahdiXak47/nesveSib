@@ -2,8 +2,7 @@ package NesveSib.Installment.conttroller;
 
 import NesveSib.Installment.exceptions.OutputCode;
 import NesveSib.Installment.model.users.Customer;
-import NesveSib.Installment.model.users.Seller;
-import NesveSib.Installment.requestInputs.CompleteAccountForm;
+import NesveSib.Installment.requestInputs.CompleteCustomerAccountForm;
 import NesveSib.Installment.requestInputs.LoginRequestCheckInput;
 import NesveSib.Installment.requestInputs.NewUserRequestInput;
 import NesveSib.Installment.service.CustomerAccountService;
@@ -14,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static NesveSib.Installment.exceptions.OutputCode.ERROR_4005;
 
 @RestController
 @RequestMapping("/customer-panel")
@@ -66,17 +67,22 @@ public class CustomerPanelController {
     }
 
     @PostMapping("/complete-account-to-active")
-    public ResponseEntity<String> completeAccountToActive(@CookieValue(name = "token") String token, @RequestBody CompleteAccountForm input) {
+    public ResponseEntity<String> completeAccountToActive(@CookieValue(name = "token") String token, @RequestBody CompleteCustomerAccountForm input) {
         logger.info("completeAccountToActive: going to active customer account");
         ResponseEntity<String> tokenValidation = tokenValidationCheck(token);
         if (tokenValidation.equals(ResponseEntity.status(HttpStatus.CREATED).body("token is valid"))) {
             Customer customer = customerAccountService.findCustomerByToken(token);
-            if (customerAccountService.completeAndActiveAccount(customer, input)) {
-                logger.info("completeAccountToActive: customer activated successfully");
-                return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+            if (customerAccountService.checkIfEmailIsDuplicated(input.getEmail())) {
+                if (customerAccountService.completeAndActiveAccount(customer, input)) {
+                    logger.info("completeAccountToActive: customer activated successfully");
+                    return ResponseEntity.ok(OutputCode.SUCCESS_2001.getCodeMessage());
+                } else {
+                    logger.info("completeAccountToActive oops error!");
+                    return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+                }
             } else {
-                logger.info("completeAccountToActive oops error!");
-                return ResponseEntity.ok(OutputCode.ERROR_8888.getCodeMessage());
+                logger.info("completeAccountToActive: another user is active with this email address");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(ERROR_4005.getCodeMessage());
             }
         } else
             return tokenValidation;

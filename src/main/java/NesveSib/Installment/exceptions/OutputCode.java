@@ -1,7 +1,7 @@
 package NesveSib.Installment.exceptions;
 
 public enum OutputCode {
-    ERROR_5001("a seller with this national id exists!"),
+    ERROR_5001("فروشنده با کدملی وارد شده وجود دارد"),
     ERROR_5002("a seller with this national id does not exist!"),
     ERROR_5004("a seller with this username does not exist!"),
     ERROR_5005("a seller with this email does not exist!"),
@@ -12,6 +12,7 @@ public enum OutputCode {
     ERROR_4002("Customer do not have panel in nesve sib system!"),
     ERROR_4003("Customer do not have valid guarantee"),
     ERROR_4004("customer with this phoneNumber exists!"),
+    ERROR_4005("یک مشتری دیگر با این ایمیل اکانت ساخته است"),
     ERROR_4030("You most fill all of required parts to continue"),
     SUCCESS_2001("operation completed successfully!"),
     ERROR_4008("input is invalid, type email address of phoneNumber"),

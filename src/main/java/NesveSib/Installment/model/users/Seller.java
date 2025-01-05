@@ -13,7 +13,8 @@ import java.util.List;
 @Entity
 @Table(name = "seller_tbl", uniqueConstraints = {
         @UniqueConstraint(columnNames = "national_id"),
-        @UniqueConstraint(columnNames = "phone_number")
+        @UniqueConstraint(columnNames = "phone_number"),
+        @UniqueConstraint(columnNames = "email")
 })
 public class Seller {
 
@@ -51,9 +52,9 @@ public class Seller {
     @Column(name = "store_code")
     private Integer storeId;
 
-//    @Column(name = "is_active")
-//    private boolean isActive;
-//
+    @Column(name = "is_active")
+    private boolean isActive;
+
     @Column(name = "last_login_date")
     private Date lastLoginDate;
 

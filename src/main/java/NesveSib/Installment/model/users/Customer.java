@@ -12,7 +12,8 @@ import java.util.Date;
 @Entity
 @Table(name = "customer_tbl", uniqueConstraints = {
         @UniqueConstraint(columnNames = "national_id"),
-        @UniqueConstraint(columnNames = "phone_number")
+        @UniqueConstraint(columnNames = "phone_number"),
+        @UniqueConstraint(columnNames = "email")
 })
 public class Customer {
     @NonNull
@@ -77,6 +78,7 @@ public class Customer {
     public Customer() {
 
     }
+
 
 //    private List<Product> customerPurchasedProducts;
 
