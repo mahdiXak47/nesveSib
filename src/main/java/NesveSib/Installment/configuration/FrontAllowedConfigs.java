@@ -9,11 +9,17 @@ public class FrontAllowedConfigs implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**") // Allow all endpoints
-                .allowedOrigins("http://localhost:5173") // Allow your frontend origin
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow specific HTTP methods
-                .allowedHeaders("*") // Allow all headers
-                .allowCredentials(true); // Allow credentials if needed
+        registry.addMapping("/**")
+                .allowedOrigins(
+                    "https://github.com/mahdiXak47/NesveSib-UI-Next.js",
+                    "http://ns-ui-554f664447-zdcb7:3000",
+                    "registry.hamdocker.ir/mahdiaxak-customer-ns-ui",
+                    "http://ns-ui.mahdiaxak-customer-ns.svc"
+                )
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600); // Cache preflight requests for 1 hour
     }
 
     @Bean
@@ -22,9 +28,16 @@ public class FrontAllowedConfigs implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowCredentials(true);
+                        .allowedOrigins(
+                            "https://github.com/mahdiXak47/NesveSib-UI-Next.js",
+                            "http://ns-ui-554f664447-zdcb7:3000",
+                            "registry.hamdocker.ir/mahdiaxak-customer-ns-ui",
+                            "http://ns-ui.mahdiaxak-customer-ns.svc"
+                        )
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true)
+                        .maxAge(3600);
             }
         };
     }
