@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>NesveSib</groupId>
-	<artifactId>Installment</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>Backend</artifactId>
+	<version>0.0.1</version>
 	<name>ISE</name>
 	<description>InstallmentSystemEngine</description>
 	<url/>

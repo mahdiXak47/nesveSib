@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: nesve_sib_app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/nesvesib_db
+      - SPRING_DATASOURCE_USERNAME=nesve_user
+      - SPRING_DATASOURCE_PASSWORD=nesve_password
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14
+    container_name: nesve_sib_db
+    environment:
+      POSTGRES_DB: nesvesib_db
+      POSTGRES_USER: nesve_user
+      POSTGRES_PASSWORD: nesve_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
