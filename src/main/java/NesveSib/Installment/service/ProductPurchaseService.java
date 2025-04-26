@@ -8,7 +8,7 @@ import NesveSib.Installment.model.productModels.Product;
 import NesveSib.Installment.model.productModels.ProductPurchasedDetail;
 import NesveSib.Installment.model.users.Customer;
 import NesveSib.Installment.model.users.Seller;
-import NesveSib.Installment.respository.*;
+import NesveSib.Installment.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

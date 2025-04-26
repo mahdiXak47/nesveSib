@@ -1,8 +1,8 @@
 package NesveSib.Installment.service;
 
 
-import NesveSib.Installment.conttroller.AddInvestorForm;
-import NesveSib.Installment.conttroller.AddShopManForm;
+import NesveSib.Installment.controller.AddInvestorForm;
+import NesveSib.Installment.controller.AddShopManForm;
 import NesveSib.Installment.model.productModels.Airpod;
 import NesveSib.Installment.model.addingProductToStore.SideProductToBeAddedToStore;
 import NesveSib.Installment.model.productModels.Watch;
@@ -11,7 +11,7 @@ import NesveSib.Installment.model.productModels.SideProductStock;
 import NesveSib.Installment.model.users.SellerStoreInvestor;
 import NesveSib.Installment.model.users.Seller;
 import NesveSib.Installment.model.users.ShopMan;
-import NesveSib.Installment.respository.*;
+import NesveSib.Installment.repository.*;
 import NesveSib.Installment.utils.ProjectInternalTools;
 import ch.qos.logback.classic.Logger;
 import org.springframework.stereotype.Service;
