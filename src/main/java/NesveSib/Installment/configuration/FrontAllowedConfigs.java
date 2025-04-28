@@ -11,10 +11,10 @@ public class FrontAllowedConfigs implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins(
-                    "https://github.com/mahdiXak47/NesveSib-UI-Next.js",
-                    "http://ns-ui-554f664447-zdcb7:3000",
-                    "registry.hamdocker.ir/mahdiaxak-customer-ns-ui",
-                    "http://ns-ui.mahdiaxak-customer-ns.svc"
+                    "https://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
+                    "http://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
+                    "http://ns-ui.mahdiaxak-customer-ns.svc",
+                    "https://ns-ui.mahdiaxak-customer-ns.svc"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
@@ -29,10 +29,10 @@ public class FrontAllowedConfigs implements WebMvcConfigurer {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins(
-                            "https://github.com/mahdiXak47/NesveSib-UI-Next.js",
-                            "http://ns-ui-554f664447-zdcb7:3000",
-                            "registry.hamdocker.ir/mahdiaxak-customer-ns-ui",
-                            "http://ns-ui.mahdiaxak-customer-ns.svc"
+                            "https://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
+                            "http://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
+                            "http://ns-ui.mahdiaxak-customer-ns.svc",
+                            "https://ns-ui.mahdiaxak-customer-ns.svc"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
