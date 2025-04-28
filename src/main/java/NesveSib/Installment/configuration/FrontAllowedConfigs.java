@@ -14,6 +14,8 @@ public class FrontAllowedConfigs implements WebMvcConfigurer {
                 .allowedOrigins(
                         "https://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
                         "http://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
+                        "https://21e825e2-5fd5-49e3-8ce5-b2227fb443c7.hsvc.ir",
+                        "http://21e825e2-5fd5-49e3-8ce5-b2227fb443c7.hsvc.ir",
                         "http://ns-ui.mahdiaxak-customer-ns.svc",
                         "https://ns-ui.mahdiaxak-customer-ns.svc",
                         "https://www.yedamanebemabededige.ir",
