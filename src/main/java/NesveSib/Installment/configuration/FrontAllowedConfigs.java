@@ -11,16 +11,19 @@ public class FrontAllowedConfigs implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins(
-                        "https://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
-                        "http://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
-                        "https://21e825e2-5fd5-49e3-8ce5-b2227fb443c7.hsvc.ir",
-                        "http://21e825e2-5fd5-49e3-8ce5-b2227fb443c7.hsvc.ir",
-                        "http://ns-ui.mahdiaxak-customer-ns.svc",
-                        "https://ns-ui.mahdiaxak-customer-ns.svc",
-                        "https://www.yedamanebemabededige.ir",
-                        "http://www.yedamanebemabededige.ir"
-                )
+                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
+//                .allowedOrigins(
+//                        "*",
+//                        "https://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
+//                        "http://a94c6971-6cc5-4bf1-8cb4-aff211be6904.hsvc.ir",
+//                        "https://21e825e2-5fd5-49e3-8ce5-b2227fb443c7.hsvc.ir",
+//                        "http://21e825e2-5fd5-49e3-8ce5-b2227fb443c7.hsvc.ir",
+//                        "http://ns-ui.mahdiaxak-customer-ns.svc",
+//                        "https://ns-ui.mahdiaxak-customer-ns.svc",
+//                        "https://www.yedamanebemabededige.ir",
+//                        "http://www.yedamanebemabededige.ir"
+//                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true)
